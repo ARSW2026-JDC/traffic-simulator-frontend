@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useChatStore } from '../../stores/chatStore';
 import type { RefObject } from 'react';
 import type { Socket } from 'socket.io-client';
 import ControlPanel from '../ControlPanel/ControlPanel';
@@ -27,6 +28,8 @@ export default function Sidebar({ simSocket, chatSocket }: Props) {
     ...(isAdmin ? [{ id: 'admin' as Tab, label: 'Admin' }] : []),
   ];
 
+  const { isConnected } = useChatStore();
+
   return (
     <aside className="w-80 flex flex-col bg-card border-l border-border shrink-0 overflow-hidden">
       <div className="flex border-b border-border shrink-0">
@@ -40,6 +43,18 @@ export default function Sidebar({ simSocket, chatSocket }: Props) {
                 : 'text-muted hover:text-white'
             }`}
           >
+            {t.id === 'chat' && (
+              <span
+                className="inline-block align-middle mr-2"
+                title={isConnected ? 'Conectado' : 'Desconectado'}
+              >
+                <span
+                  className={`w-2 h-2 rounded-full inline-block ${
+                    isConnected ? 'bg-green-500' : 'bg-red-500'
+                  }`}
+                />
+              </span>
+            )}
             {t.label}
           </button>
         ))}

@@ -36,14 +36,6 @@ export default function ChatPanel({ chatSocket }: Props) {
 
   return (
     <div className="h-full flex flex-col">
-      <div className="flex items-center justify-between px-4 py-2 border-b border-border shrink-0">
-        <span className="text-xs text-muted">{messages.length} messages</span>
-        <div className="flex items-center gap-1.5">
-          <div className={`w-1.5 h-1.5 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`} />
-          <span className="text-xs text-muted">{isConnected ? 'live' : 'offline'}</span>
-        </div>
-      </div>
-
       <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
         {messages.map((msg) => {
           const isOwn = msg.userId === user?.id;
@@ -58,8 +50,8 @@ export default function ChatPanel({ chatSocket }: Props) {
               <div
                 className={`px-3 py-2 rounded-xl text-sm max-w-[90%] break-words ${
                   isOwn
-                    ? 'bg-blue-600 text-white rounded-br-sm'
-                    : 'bg-surface text-slate-200 rounded-bl-sm'
+                    ? 'bg-sky-300 text-black rounded-br-sm'
+                    : 'bg-surface text-black rounded-bl-sm'
                 }`}
               >
                 {msg.content}
@@ -79,7 +71,7 @@ export default function ChatPanel({ chatSocket }: Props) {
               onKeyDown={handleKey}
               placeholder="Send a message..."
               maxLength={500}
-              className="flex-1 px-3 py-2 bg-surface border border-border rounded-lg text-sm text-white placeholder-muted focus:outline-none focus:border-blue-500"
+              className="flex-1 px-3 py-2 bg-surface border border-border rounded-lg text-sm text-black placeholder:text-muted focus:outline-none focus:border-blue-500"
             />
             <button
               onClick={send}
