@@ -30,9 +30,8 @@ export default function Navbar({ simSocket: _simSocket }: Props) {
   return (
     <header className="h-12 bg-card border-b border-border flex items-center px-4 gap-4 shrink-0">
       <div className="flex items-center gap-2">
-        <span className="text-lg">🚦</span>
-        <span className="font-semibold text-white text-sm">Traffic Simulator</span>
-        <span className="text-muted text-xs">Bogotá</span>
+        <span className="font-semibold text-black text-sm">Traffic Simulator</span>
+        <span className="text-muted text-black text-xs">Bogotá</span>
       </div>
 
       <div className="flex items-center gap-1.5 ml-2">
@@ -46,7 +45,7 @@ export default function Navbar({ simSocket: _simSocket }: Props) {
       <div className="ml-auto flex items-center gap-4">
         {user && (
           <div className="flex items-center gap-2">
-            <span className="text-sm text-slate-300">{user.name || user.email}</span>
+            <span className="text-sm text-slate-800">{user.name || user.email}</span>
             <span className={`text-xs font-medium ${roleColor[user.role] || 'text-muted'}`}>
               {user.role}
             </span>
@@ -54,7 +53,7 @@ export default function Navbar({ simSocket: _simSocket }: Props) {
         )}
         <button
           onClick={handleLogout}
-          className="text-xs text-muted hover:text-white transition-colors"
+          className="text-xs text-muted hover:text-gray-900 transition-colors"
         >
           Sign out
         </button>
