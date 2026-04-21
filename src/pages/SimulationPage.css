@@ -288,6 +288,76 @@
 }
 .sim-map > * { width: 100%; height: 100%; }
 
+.sim-right-panel {
+  width: 320px;
+  flex-shrink: 0;
+  background: var(--s-white);
+  border-left: 1px solid var(--s-border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sim-right-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-bottom: 1px solid var(--s-border);
+  background: #f8fafc;
+}
+
+.sim-right-tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.7rem 0.5rem;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--s-sub);
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.sim-right-tab--idle:hover {
+  color: var(--s-text);
+  background: #eef2ff;
+}
+
+.sim-right-tab--active {
+  color: var(--s-blue);
+  border-bottom-color: var(--s-blue);
+  background: #eff6ff;
+}
+
+.sim-right-tab-dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sim-right-tab-dot-inner {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+}
+
+.sim-right-tab-dot--on {
+  background: #22c55e;
+}
+
+.sim-right-tab-dot--off {
+  background: #ef4444;
+}
+
+.sim-right-content {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
 /* ── RIGHT PANEL ── */
 .sim-right {
   width: 260px;

@@ -31,26 +31,26 @@ export default function Sidebar({ simSocket, chatSocket }: Props) {
   const { isConnected } = useChatStore();
 
   return (
-    <aside className="w-80 flex flex-col bg-card border-l border-border shrink-0 overflow-hidden">
-      <div className="flex border-b border-border shrink-0">
+    <aside className="sim-right-panel">
+      <div className="sim-right-tabs">
         {tabs.map((t) => (
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
-            className={`flex-1 py-2.5 text-xs font-medium transition-colors ${
+            className={`sim-right-tab ${
               tab === t.id
-                ? 'text-blue-400 border-b-2 border-blue-400'
-                : 'text-muted hover:text-white'
+                ? 'sim-right-tab--active'
+                : 'sim-right-tab--idle'
             }`}
           >
             {t.id === 'chat' && (
               <span
-                className="inline-block align-middle mr-2"
+                className="sim-right-tab-dot"
                 title={isConnected ? 'Conectado' : 'Desconectado'}
               >
                 <span
-                  className={`w-2 h-2 rounded-full inline-block ${
-                    isConnected ? 'bg-green-500' : 'bg-red-500'
+                  className={`sim-right-tab-dot-inner ${
+                    isConnected ? 'sim-right-tab-dot--on' : 'sim-right-tab-dot--off'
                   }`}
                 />
               </span>
@@ -60,7 +60,7 @@ export default function Sidebar({ simSocket, chatSocket }: Props) {
         ))}
       </div>
 
-      <div className="flex-1 overflow-hidden">
+      <div className="sim-right-content">
         {tab === 'control' && <ControlPanel simSocket={simSocket} />}
         {tab === 'chat' && <ChatPanel chatSocket={chatSocket} />}
         {tab === 'history' && <HistoryPanel />}

@@ -48,6 +48,15 @@ export interface SimulationDelta {
   timestamp: number;
 }
 
+export interface SimulationSummary {
+  simId: string;
+  mapId: string;
+  nVehicles: number;
+  createdBy: string;
+  nodeId: string;
+  createdAt: number;
+}
+
 export interface ChatMessage {
   id: string;
   userId: string;
@@ -71,4 +80,11 @@ export interface ChangeLogEntry {
 export interface RouteInfo {
   id: string;
   name: string;
+}
+
+export interface BBox {
+  minLng: number;
+  minLat: number;
+  maxLng: number;
+  maxLat: number;
 }

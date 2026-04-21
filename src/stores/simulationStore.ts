@@ -1,5 +1,12 @@
 import { create } from 'zustand';
-import type { Vehicle, TrafficLight, SimulationDelta, RouteInfo } from '../types';
+import type {
+  Vehicle,
+  TrafficLight,
+  SimulationDelta,
+  RouteInfo,
+  SimulationSummary,
+  BBox,
+} from '../types';
 
 interface SimulationStore {
   vehicles: Record<string, Vehicle>;
@@ -9,6 +16,10 @@ interface SimulationStore {
   isConnected: boolean;
   tick: number;
   routes: RouteInfo[];
+  simulations: SimulationSummary[];
+  activeSimId: string | null;
+  bbox: BBox | null;
+  basemapId: string;
   setFullState: (
     vehicles: Record<string, Vehicle>,
     trafficLights: Record<string, TrafficLight>,
@@ -19,6 +30,10 @@ interface SimulationStore {
   deselect: () => void;
   setConnected: (v: boolean) => void;
   setRoutes: (routes: RouteInfo[]) => void;
+  setSimulationList: (list: SimulationSummary[]) => void;
+  setActiveSimId: (simId: string | null) => void;
+  setBbox: (bbox: BBox | null) => void;
+  setBasemapId: (basemapId: string) => void;
 }
 
 export const useSimulationStore = create<SimulationStore>((set) => ({
@@ -29,6 +44,10 @@ export const useSimulationStore = create<SimulationStore>((set) => ({
   isConnected: false,
   tick: 0,
   routes: [],
+  simulations: [],
+  activeSimId: null,
+  bbox: null,
+  basemapId: 'cartoLight',
 
   setFullState: (vehicles, trafficLights, tick) => set({ vehicles, trafficLights, tick }),
 
@@ -59,4 +78,8 @@ export const useSimulationStore = create<SimulationStore>((set) => ({
   deselect: () => set({ selectedId: null, selectedType: null }),
   setConnected: (isConnected) => set({ isConnected }),
   setRoutes: (routes) => set({ routes }),
+  setSimulationList: (simulations) => set({ simulations }),
+  setActiveSimId: (activeSimId) => set({ activeSimId }),
+  setBbox: (bbox) => set({ bbox }),
+  setBasemapId: (basemapId) => set({ basemapId }),
 }));

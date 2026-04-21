@@ -55,4 +55,39 @@ export async function getHistory(limit = 50, cursor?: string) {
   return res.data;
 }
 
+export async function getSimulations() {
+  const res = await api.get('/sim/sim');
+  return res.data;
+}
+
+export async function getSimulationById(simId: string) {
+  const res = await api.get(`/sim/sim/${simId}`);
+  return res.data;
+}
+
+export async function deleteSimulationById(simId: string) {
+  const res = await api.delete(`/sim/sim/${simId}`);
+  return res.data;
+}
+
+export async function createSimulation(payload: {
+  mapId: string;
+  nVehicles: number;
+  driverMix?: {
+    aggressive: number;
+    normal: number;
+    cautious: number;
+    truck: number;
+    bus: number;
+  };
+}) {
+  const res = await api.post('/sim/sim', payload);
+  return res.data;
+}
+
+export async function getAvailableMaps() {
+  const res = await api.get('/sim/sim/maps/available');
+  return res.data;
+}
+
 export default api;

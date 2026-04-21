@@ -3,17 +3,27 @@ import { useNavigate } from 'react-router-dom';
 import { auth } from '../../services/firebase';
 import { useAuthStore } from '../../stores/authStore';
 import { useSimulationStore } from '../../stores/simulationStore';
+import type { RefObject } from 'react';
+import type { Socket } from 'socket.io-client';
 import cutsLogo from '../../assets/cuts_logo.png';
 
-export default function SimNavbar() {
+interface Props {
+  simSocket: RefObject<Socket | null>;
+}
+
+export default function SimNavbar({ simSocket: _simSocket }: Props) {
   const { user, firebaseUser, logout } = useAuthStore();
   const { isConnected } = useSimulationStore();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    await signOut(auth);
     logout();
-    navigate('/landing');
+    navigate('/landing', { replace: true });
+    try {
+      await signOut(auth);
+    } catch {
+      // Keep local logout/navigation even if remote signOut fails.
+    }
   };
 
   const displayName = user?.name || firebaseUser?.displayName || user?.email || 'Usuario';
