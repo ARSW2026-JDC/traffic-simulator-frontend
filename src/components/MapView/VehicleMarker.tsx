@@ -6,7 +6,7 @@ import type { RefObject } from 'react';
 import type { Socket } from 'socket.io-client';
 
 function createVehicleIcon(color: string, heading: number, selected: boolean): L.DivIcon {
-  const size = selected ? 20 : 16;
+  const size = selected ? 15 : 13;
   const border = selected ? `border: 2px solid white;` : '';
   const shadow = selected ? 'filter: drop-shadow(0 0 6px white);' : '';
   return L.divIcon({

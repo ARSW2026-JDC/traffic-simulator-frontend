@@ -51,7 +51,7 @@ export default function ChatPanel({ chatSocket }: Props) {
                 className={`px-3 py-2 rounded-xl text-sm max-w-[90%] break-words ${
                   isOwn
                     ? 'bg-sky-300 text-black rounded-br-sm'
-                    : 'bg-surface text-black rounded-bl-sm'
+                    : 'bg-sky-500/100 text-black rounded-bl-sm'
                 }`}
               >
                 {msg.content}

@@ -5,56 +5,69 @@ import { useAuthStore } from '../../stores/authStore';
 import { useSimulationStore } from '../../stores/simulationStore';
 import type { RefObject } from 'react';
 import type { Socket } from 'socket.io-client';
+import cutsLogo from '../../assets/cuts_logo.png';
 
 interface Props {
   simSocket: RefObject<Socket | null>;
+  onToggleLeft?: () => void;
 }
 
-export default function Navbar({ simSocket: _simSocket }: Props) {
-  const { user, logout } = useAuthStore();
-  const { isConnected, } = useSimulationStore();
+export default function SimNavbar({ simSocket: _simSocket, onToggleLeft }: Props) {
+  const { user, firebaseUser, logout } = useAuthStore();
+  const { isConnected } = useSimulationStore();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    await signOut(auth);
     logout();
-    navigate('/auth');
+    navigate('/landing', { replace: true });
+    try {
+      await signOut(auth);
+    } catch {
+      // Keep local logout/navigation even if remote signOut fails.
+    }
   };
 
-  const roleColor: Record<string, string> = {
-    ADMIN: 'text-yellow-400',
-    USER: 'text-blue-400',
-    GUEST: 'text-slate-400',
-  };
+  const displayName = user?.name || firebaseUser?.displayName || user?.email || 'Usuario';
 
   return (
-    <header className="h-12 bg-card border-b border-border flex items-center px-4 gap-4 shrink-0">
-      <div className="flex items-center gap-2">
-        <span className="font-semibold text-black text-sm">Traffic Simulator</span>
-        <span className="text-muted text-black text-xs">Bogotá</span>
+    <header className="sim-nav">
+      {/* Brand */}
+      <div className="sim-nav-brand">
+        <img src={cutsLogo} alt="CUTS" className="sim-nav-logo" />
+        <span className="sim-nav-title">CUTS - Collaborative Urban Traffic Simulator</span>
       </div>
 
-      <div className="flex items-center gap-1.5 ml-2">
+      {/* Connection dot */}
+      <div className="sim-conn-status">
         <div
-          className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`}
+          className={`sim-conn-dot ${isConnected ? 'sim-conn-dot--on' : 'sim-conn-dot--off'}`}
+          aria-hidden="true"
         />
-        <span className="text-xs text-muted">{isConnected ? 'Connected' : 'Disconnected'}</span>
+        <span className="sim-conn-text">
+          {isConnected ? 'Conectado' : 'Desconectado'}
+        </span>
       </div>
 
-      <div className="ml-auto flex items-center gap-4">
-        {user && (
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-slate-800">{user.name || user.email}</span>
-            <span className={`text-xs font-medium ${roleColor[user.role] || 'text-muted'}`}>
-              {user.role}
-            </span>
+      {/* Right side */}
+      <div className="sim-nav-right">
+        <button className="sim-nav-menu" onClick={onToggleLeft} title="Mostrar panel" type="button">
+          ☰
+        </button>
+        <div className="sim-nav-user">
+          <span>{displayName}</span>
+          <div className="sim-nav-avatar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
           </div>
-        )}
-        <button
-          onClick={handleLogout}
-          className="text-xs text-muted hover:text-gray-900 transition-colors"
-        >
-          Sign out
+        </div>
+        <button className="sim-nav-logout" onClick={handleLogout} title="Cerrar sesión">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
         </button>
       </div>
     </header>

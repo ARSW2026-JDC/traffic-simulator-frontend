@@ -60,6 +60,8 @@ export default function ControlPanel({ simSocket }: Props) {
     }
 
     setActiveSimId(simId);
+    setFullState({}, {}, 0);
+    setRoutes([]);
     deselect();
     simSocket.current?.emit('sync:request', { simId });
     simSocket.current?.emit('routes:request');

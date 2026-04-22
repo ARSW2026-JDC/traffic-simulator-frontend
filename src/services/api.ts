@@ -55,7 +55,6 @@ export async function getHistory(limit = 50, cursor?: string) {
   return res.data;
 }
 
-// --- Simulations API ---
 export async function getSimulations() {
   const res = await api.get('/sim/sim');
   return res.data;

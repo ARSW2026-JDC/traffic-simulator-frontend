@@ -55,6 +55,7 @@ export function useSimulationSocket() {
     });
 
     return () => {
+      setConnected(false);
       socket.disconnect();
     };
   }, [token, user]);

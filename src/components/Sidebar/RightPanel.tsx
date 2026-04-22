@@ -1,0 +1,45 @@
+import { useState } from 'react';
+import { useChatStore } from '../../stores/chatStore';
+import type { RefObject } from 'react';
+import type { Socket } from 'socket.io-client';
+import ChatPanel from '../ChatPanel/ChatPanel';
+import HistoryPanel from '../HistoryPanel/HistoryPanel';
+
+type RightTab = 'chat' | 'history';
+
+interface Props {
+  chatSocket: RefObject<Socket | null>;
+}
+
+export default function RightPanel({ chatSocket }: Props) {
+  const [tab, setTab] = useState<RightTab>('chat');
+  const { isConnected, messages } = useChatStore();
+  const unread = Math.min(messages.length, 99);
+
+  return (
+    <aside className="sim-right-panel slim">
+      <div className="sim-right-tabs two-cols">
+        <button
+          onClick={() => setTab('chat')}
+          className={`sim-right-tab ${tab === 'chat' ? 'sim-right-tab--active' : 'sim-right-tab--idle'}`}
+        >
+          <span className="sim-right-tab-dot" title={isConnected ? 'Conectado' : 'Desconectado'}>
+            <span className={`sim-right-tab-dot-inner ${isConnected ? 'sim-right-tab-dot--on' : 'sim-right-tab-dot--off'}`} />
+          </span>
+          Chat
+        </button>
+        <button
+          onClick={() => setTab('history')}
+          className={`sim-right-tab ${tab === 'history' ? 'sim-right-tab--active' : 'sim-right-tab--idle'}`}
+        >
+          History
+        </button>
+      </div>
+
+      <div className="sim-right-content">
+        {tab === 'chat' && <ChatPanel chatSocket={chatSocket} />}
+        {tab === 'history' && <HistoryPanel />}
+      </div>
+    </aside>
+  );
+}

@@ -1,10 +1,11 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useEffect } from 'react';
-import { onAuthStateChanged, type User as FirebaseUser } from 'firebase/auth';
+import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './services/firebase';
 import { useAuthStore } from './stores/authStore';
 import AuthPage from './pages/AuthPage';
 import SimulationPage from './pages/SimulationPage';
+import LandingPage from './pages/LandingPage';
 import { verifyToken } from './services/api';
 import { User } from 'firebase/auth/cordova';
 
@@ -35,12 +36,13 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/landing" element={<LandingPage />} />
         <Route path="/auth" element={<AuthPage />} />
         <Route
           path="/"
-          element={firebaseUser ? <SimulationPage /> : <Navigate to="/auth" replace />}
+          element={firebaseUser ? <SimulationPage /> : <Navigate to="/landing" replace />}
         />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<Navigate to="/landing" replace />} />
       </Routes>
     </BrowserRouter>
   );
