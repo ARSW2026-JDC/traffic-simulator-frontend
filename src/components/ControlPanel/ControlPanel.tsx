@@ -76,10 +76,10 @@ export default function ControlPanel({ simSocket }: Props) {
     <div className="h-full overflow-y-auto p-4 space-y-4">
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <h3 className="text-sm text-gray-600 font-semibold">Simulacion</h3>
+          <h3 className="text-sm text-[var(--s-text)] font-medium">Simulacion</h3>
           <button
             onClick={requestList}
-            className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
+            className="text-xs text-[#2258B1] hover:text-[#1a46a0] transition-colors"
           >
             Actualizar
           </button>
@@ -102,7 +102,7 @@ export default function ControlPanel({ simSocket }: Props) {
       </div>
 
       <div className="space-y-2">
-        <h3 className="text-sm text-gray-600 font-semibold">Mapa base</h3>
+        <h3 className="text-sm text-[var(--s-text)] font-medium">Mapa base</h3>
         <select
           value={basemapId}
           onChange={(e) => handleBasemapChange(e.target.value)}
@@ -121,14 +121,14 @@ export default function ControlPanel({ simSocket }: Props) {
           <div className="text-4xl mb-3">🗺️</div>
           <p className="text-[var(--s-sub)] text-sm">Click on a vehicle or traffic light on the map to select it.</p>
           {!canEdit && (
-            <p className="text-xs text-slate-500 mt-2">Guest mode — view only.</p>
+              <p className="text-xs text-[var(--s-sub)] mt-2">Guest mode — view only.</p>
           )}
         </div>
       ) : (
         <>
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="font-semibold text-gray-600 text-sm">{entity.name}</h3>
+               <h3 className="font-medium text-[var(--s-text)] text-sm">{entity.name}</h3>
               <p className="text-xs text-[var(--s-sub)] capitalize">{selectedType}</p>
             </div>
             <button
@@ -211,13 +211,13 @@ function VehicleControls({
                   : 'bg-red-400'
             }`}
           />
-          <span className="text-sm text-gray-600 capitalize">{vehicle.status}</span>
+          <span className="text-sm text-[var(--s-text)] capitalize">{vehicle.status}</span>
         </div>
       </div>
 
       <div>
         <label className="text-xs text-[var(--s-sub)] block mb-2">
-          Speed — <span className="text-gray-600">{speed.toFixed(2)} km/h</span>
+          Speed — <span className="text-[var(--s-text)]">{speed.toFixed(2)} km/h</span>
         </label>
         <input
           type="range"
@@ -244,7 +244,7 @@ function VehicleControls({
             onChange={(e) => setColor(e.target.value)}
             className="w-10 h-10 rounded cursor-pointer border border-[var(--s-border)] bg-white"
           />
-          <span className="text-sm text-gray-600 font-mono">{color}</span>
+          <span className="text-sm text-[var(--s-text)] font-mono">{color}</span>
         </div>
       </div>
 
@@ -267,7 +267,7 @@ function VehicleControls({
       {canEdit && (
         <button
           onClick={apply}
-          className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-colors"
+          className="w-full py-2 bg-[#2258B1] hover:bg-[#1a46a0] text-white font-medium text-xs rounded-lg transition-colors"
         >
           Apply Changes
         </button>
@@ -341,7 +341,7 @@ function LightControls({
       <div className="bg-[var(--s-gray)] rounded-lg p-3 flex items-center gap-3">
         <div className={`w-4 h-4 rounded-full ${stateColors[light.state]}`} />
         <div>
-          <p className="text-sm text-gray-600 capitalize">{light.state}</p>
+          <p className="text-sm text-[var(--s-text)] capitalize">{light.state}</p>
         </div>
       </div>
 
@@ -371,7 +371,7 @@ function LightControls({
       ).map(({ label, value, set, color }) => (
         <div key={label}>
           <label className="text-xs text-[var(--s-sub)] block mb-2">
-            {label} — <span className="text-gray-600">{value}s</span>
+            {label} — <span className="text-[var(--s-text)]">{value}s</span>
           </label>
           <input
             type="range"
@@ -392,7 +392,7 @@ function LightControls({
       {canEdit && (
         <button
           onClick={apply}
-          className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-colors"
+          className="w-full py-2 bg-[#2258B1] hover:bg-[#1a46a0] text-white font-medium text-xs rounded-lg transition-colors"
         >
           Apply Changes
         </button>
