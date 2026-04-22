@@ -31,7 +31,7 @@ export default function TrafficLightMarker({ light }: Props) {
     >
       <Tooltip direction="top" offset={[0, -8]} opacity={0.9}>
         <span className="text-xs">
-          {light.name} — {light.state} ({Math.round(light.stateTimer / 1000)}s)
+          {light.name} — {light.state}
         </span>
       </Tooltip>
     </CircleMarker>

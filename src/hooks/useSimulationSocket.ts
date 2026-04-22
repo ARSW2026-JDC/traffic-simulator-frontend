@@ -26,7 +26,6 @@ export function useSimulationSocket() {
     socket.on('connect', () => {
       setConnected(true);
       socket.emit('sync:request');
-      socket.emit('routes:request');
     });
 
     socket.on('disconnect', () => setConnected(false));

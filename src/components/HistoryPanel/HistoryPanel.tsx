@@ -16,6 +16,12 @@ const FIELD_LABELS: Record<string, string> = {
   deleted: 'deleted',
 };
 
+const formatFieldValue = (field: string, value: string) => {
+  if (field !== 'speed') return value;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed.toFixed(2) : value;
+};
+
 export default function HistoryPanel() {
   const { entries, isLoading } = useHistoryStore();
 
@@ -59,9 +65,13 @@ export default function HistoryPanel() {
               {entry.field !== 'created' && entry.field !== 'deleted' && (
                 <>
                   {' from '}
-                  <span className="font-mono text-slate-400">{entry.oldValue}</span>
+                  <span className="font-mono text-slate-400">
+                    {formatFieldValue(entry.field, entry.oldValue)}
+                  </span>
                   {' → '}
-                  <span className="font-mono text-blue-300">{entry.newValue}</span>
+                  <span className="font-mono text-blue-300">
+                    {formatFieldValue(entry.field, entry.newValue)}
+                  </span>
                 </>
               )}
             </p>

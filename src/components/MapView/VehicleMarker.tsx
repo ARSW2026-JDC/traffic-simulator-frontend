@@ -48,7 +48,7 @@ export default function VehicleMarker({ vehicle, simSocket: _simSocket }: Props)
     >
       <Tooltip direction="top" offset={[0, -8]} opacity={0.9}>
         <span className="text-xs">
-          {vehicle.name} — {vehicle.speed} km/h — {vehicle.status}
+          {vehicle.name} — {vehicle.speed.toFixed(2)} km/h — {vehicle.status}
         </span>
       </Tooltip>
     </Marker>
