@@ -197,33 +197,6 @@
 }
 .cuts-img-wrapper:hover .cuts-hero-img { transform: scale(1.04); }
 
-.cuts-img-badge {
-  position: absolute;
-  bottom: 1rem;
-  left: 1rem;
-  background: rgba(255,255,255,.92);
-  backdrop-filter: blur(6px);
-  border-radius: 20px;
-  padding: .35rem .9rem;
-  font-size: .8rem;
-  font-weight: 600;
-  color: var(--text);
-  display: flex;
-  align-items: center;
-  gap: .45rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,.12);
-}
-.cuts-badge-dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: #22c55e;
-  animation: pulse-dot 2s ease-in-out infinite;
-}
-@keyframes pulse-dot {
-  0%,100% { box-shadow: 0 0 0 0 rgba(34,197,94,.5); }
-  50%      { box-shadow: 0 0 0 6px rgba(34,197,94,0); }
-}
-
 /* ── FEATURES ── */
 .cuts-features {
   background: var(--gray);

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { MapContainer, Rectangle, TileLayer, useMap, useMapEvents } from 'react-leaflet';
 import { useSimulationStore } from '../../stores/simulationStore';
 import { BASEMAPS, DEFAULT_BASEMAP_ID } from './basemaps';
@@ -7,6 +7,9 @@ import VehicleMarker from './VehicleMarker';
 import TrafficLightMarker from './TrafficLightMarker';
 import type { RefObject } from 'react';
 import type { Socket } from 'socket.io-client';
+
+const DEFAULT_CENTER: [number, number] = [4.6, -74.0836];
+const DEFAULT_ZOOM = 13;
 
 function Markers({ simSocket }: { simSocket: RefObject<Socket | null> }) {
   useMap();
@@ -30,7 +33,7 @@ function CustomZoomControls() {
 
   const zoomIn = () => map.setZoom(map.getZoom() + 1);
   const zoomOut = () => map.setZoom(map.getZoom() - 1);
-  const resetView = () => map.setView([4.60, -74.0836], 13);
+  const resetView = () => map.setView(DEFAULT_CENTER, DEFAULT_ZOOM);
 
   return (
     <div className="sim-map-zoom-controls" role="group" aria-label="Controles de zoom">
@@ -39,6 +42,40 @@ function CustomZoomControls() {
       <button onClick={zoomOut} type="button">-</button>
     </div>
   );
+}
+
+function SimulationViewportController() {
+  const map = useMap();
+  const activeSimId = useSimulationStore((s) => s.activeSimId);
+  const vehicles = useSimulationStore((s) => s.vehicles);
+  const trafficLights = useSimulationStore((s) => s.trafficLights);
+  const lastFocusedSimRef = useRef<string | null>(null);
+
+  const points = useMemo<[number, number][]>(() => {
+    const vehiclePoints = Object.values(vehicles).map((vehicle) => [vehicle.lat, vehicle.lon] as [number, number]);
+    const lightPoints = Object.values(trafficLights).map((light) => [light.lat, light.lon] as [number, number]);
+    return [...vehiclePoints, ...lightPoints];
+  }, [vehicles, trafficLights]);
+
+  useEffect(() => {
+    if (!activeSimId) {
+      lastFocusedSimRef.current = null;
+      return;
+    }
+
+    if (lastFocusedSimRef.current === activeSimId) return;
+    if (points.length === 0) return;
+
+    if (points.length === 1) {
+      map.flyTo(points[0], 15, { duration: 1 });
+    } else {
+      map.flyToBounds(points, { padding: [40, 40], duration: 1 });
+    }
+
+    lastFocusedSimRef.current = activeSimId;
+  }, [activeSimId, map, points]);
+
+  return null;
 }
 
 function BboxSelector() {
@@ -104,8 +141,8 @@ export default function MapView({ simSocket }: Props) {
 
   return (
     <MapContainer
-      center={[4.60, -74.0836]}
-      zoom={13}
+      center={DEFAULT_CENTER}
+      zoom={DEFAULT_ZOOM}
       className="w-full h-full"
       zoomControl={false}
     >
@@ -116,6 +153,7 @@ export default function MapView({ simSocket }: Props) {
         maxZoom={basemap.maxZoom ?? 19}
       />
       <CustomZoomControls />
+      <SimulationViewportController />
       <BboxSelector />
       <Markers simSocket={simSocket} />
     </MapContainer>

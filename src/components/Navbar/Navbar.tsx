@@ -38,12 +38,12 @@ export default function SimNavbar({ simSocket: _simSocket, onToggleLeft }: Props
       </div>
 
       {/* Connection dot */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '.4rem', marginLeft: '1rem' }}>
-        <div style={{
-          width: 8, height: 8, borderRadius: '50%',
-          background: isConnected ? '#22c55e' : '#ef4444'
-        }} />
-        <span style={{ fontSize: '.75rem', color: '#6B7280' }}>
+      <div className="sim-conn-status">
+        <div
+          className={`sim-conn-dot ${isConnected ? 'sim-conn-dot--on' : 'sim-conn-dot--off'}`}
+          aria-hidden="true"
+        />
+        <span className="sim-conn-text">
           {isConnected ? 'Conectado' : 'Desconectado'}
         </span>
       </div>

@@ -131,10 +131,6 @@ export default function LandingPage() {
         <div className="cuts-hero-right">
           <div className="cuts-img-wrapper">
             <img src={trafficHero} alt="Tráfico urbano en tiempo real" className="cuts-hero-img" />
-            <div className="cuts-img-badge">
-              <span className="cuts-badge-dot" />
-              Simulación activa
-            </div>
           </div>
         </div>
       </section>
@@ -160,7 +156,7 @@ export default function LandingPage() {
 
       {/* ── FOOTER ── */}
       <footer className="cuts-footer">
-        <span>© 2025 CUTS — Collaborative Urban Traffic Simulator</span>
+        <span>© 2026 CUTS — Collaborative Urban Traffic Simulator</span>
       </footer>
     </div>
   );
