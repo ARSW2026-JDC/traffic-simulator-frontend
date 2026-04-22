@@ -22,7 +22,7 @@ export default function AdminPanel({ simSocket }: Props) {
 
   return (
     <div className="h-full flex flex-col">
-      <div className="flex border-b border-border shrink-0">
+      <div className="flex border-b border-[var(--s-border)] shrink-0">
         {(['vehicles', 'lights', 'add', 'simulation'] as SubTab[]).map((t) => (
           <button
             key={t}
@@ -30,7 +30,7 @@ export default function AdminPanel({ simSocket }: Props) {
             className={`flex-1 py-2 text-xs capitalize transition-colors ${
               sub === t
                 ? 'text-[#2258B1] border-b-2 border-[#2258B1] bg-[#f3f4f6]'
-                : 'text-muted hover:text-[#2258B1]'
+                : 'text-[var(--s-sub)] hover:text-[#2258B1]'
             }`}
           >
             {t}
@@ -290,19 +290,19 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
           </button>
         </div>
 
-        {loading && <p className="text-xs text-muted">Cargando...</p>}
+        {loading && <p className="text-xs text-[var(--s-sub)]">Cargando...</p>}
         {error && <p className="text-xs text-red-400">{error}</p>}
 
         {list.length === 0 && !loading ? (
-          <p className="text-xs text-muted">No hay simulaciones activas.</p>
+          <p className="text-xs text-[var(--s-sub)]">No hay simulaciones activas.</p>
         ) : (
-          <div className="divide-y divide-border">
+          <div className="divide-y divide-[var(--s-border)]">
             {list.map((sim) => (
               <div key={sim.simId} className="py-2">
                 <div className="flex items-center justify-between">
-                  <p className="text-sm text-gray-600">{sim.mapId}</p>
+                  <p className="text-sm text-[var(--s-text)]">{sim.mapId}</p>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-muted">{sim.nVehicles} vehiculos</span>
+                    <span className="text-xs text-[var(--s-sub)]">{sim.nVehicles} vehiculos</span>
                     <button
                       onClick={() => removeSimulation(sim.simId)}
                       disabled={deletingId === sim.simId}
@@ -312,8 +312,8 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
                     </button>
                   </div>
                 </div>
-                <p className="text-xs text-muted font-mono">{sim.simId}</p>
-                <div className="text-xs text-muted">
+                <p className="text-xs text-[var(--s-sub)] font-mono">{sim.simId}</p>
+                <div className="text-xs text-[var(--s-sub)]">
                   <span>{sim.createdBy}</span>
                   <span className="mx-2">•</span>
                   <span>{sim.nodeId}</span>
@@ -327,13 +327,13 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
       </section>
 
       <section className="space-y-2">
-        <h3 className="text-sm text-gray-600 font-medium">Buscar por simId</h3>
+        <h3 className="text-sm text-[var(--s-text)] font-medium">Buscar por simId</h3>
         <div className="flex gap-2">
           <input
             value={simId}
             onChange={(e) => setSimId(e.target.value)}
             placeholder="28eb9d16-0d7e-45d8-a1d7-9cd40da2835f"
-            className="flex-1 px-3 py-2 bg-surface border border-border rounded-lg text-xs text-gray-600 focus:outline-none focus:border-[#2258B1]"
+            className="flex-1 px-3 py-2 bg-white border border-[var(--s-border)] rounded-lg text-xs text-[var(--s-text)] focus:outline-none focus:border-[#2258B1]"
           />
           <button
             onClick={loadOne}
@@ -344,11 +344,11 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
         </div>
 
         {single && (
-          <div className="border border-border rounded-lg p-3 text-xs">
+          <div className="border border-[var(--s-border)] rounded-lg p-3 text-xs">
             <div className="flex items-center justify-between">
-              <p className="text-sm text-gray-600">{single.mapId}</p>
+              <p className="text-sm text-[var(--s-text)]">{single.mapId}</p>
               <div className="flex items-center gap-2">
-                <span className="text-muted">{single.nVehicles} vehiculos</span>
+                <span className="text-[var(--s-sub)]">{single.nVehicles} vehiculos</span>
                 <button
                   onClick={() => removeSimulation(single.simId)}
                   disabled={deletingId === single.simId}
@@ -358,8 +358,8 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
                 </button>
               </div>
             </div>
-            <p className="text-muted font-mono">{single.simId}</p>
-            <div className="text-muted">
+            <p className="text-[var(--s-sub)] font-mono">{single.simId}</p>
+            <div className="text-[var(--s-sub)]">
               <span>{single.createdBy}</span>
               <span className="mx-2">•</span>
               <span>{single.nodeId}</span>
@@ -372,7 +372,7 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
 
       <section className="space-y-2">
         <div className="flex items-center justify-between">
-          <h3 className="text-sm text-gray-600 font-medium">Mapas disponibles</h3>
+          <h3 className="text-sm text-[var(--s-text)] font-medium">Mapas disponibles</h3>
           <button
             onClick={loadMaps}
             className="text-xs text-[#2258B1] hover:text-[#1a46a0] transition-colors"
@@ -381,20 +381,20 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
           </button>
         </div>
 
-        {mapsLoading && <p className="text-xs text-muted">Cargando...</p>}
+        {mapsLoading && <p className="text-xs text-[var(--s-sub)]">Cargando...</p>}
         {mapsError && <p className="text-xs text-red-400">{mapsError}</p>}
 
         {maps.length === 0 && !mapsLoading ? (
-          <p className="text-xs text-muted">No hay mapas disponibles.</p>
+          <p className="text-xs text-[var(--s-sub)]">No hay mapas disponibles.</p>
         ) : (
-          <div className="divide-y divide-border">
+          <div className="divide-y divide-[var(--s-border)]">
             {maps.map((map) => (
               <div key={map.id} className="py-2">
                 <div className="flex items-center justify-between">
-                  <p className="text-sm text-gray-600">{map.id}</p>
-                  <span className="text-xs text-muted">{formatBytes(map.sizeBytes)}</span>
+                  <p className="text-sm text-[var(--s-text)]">{map.id}</p>
+                  <span className="text-xs text-[var(--s-sub)]">{formatBytes(map.sizeBytes)}</span>
                 </div>
-                <p className="text-xs text-muted font-mono">{map.path}</p>
+                <p className="text-xs text-[var(--s-sub)] font-mono">{map.path}</p>
               </div>
             ))}
           </div>
@@ -403,7 +403,7 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
 
       <section className="space-y-2">
         <div className="flex items-center justify-between">
-          <h3 className="text-sm text-gray-600 font-medium">Importar mapa</h3>
+          <h3 className="text-sm text-[var(--s-text)] font-medium">Importar mapa</h3>
           <button
             type="button"
             onClick={fillFromBbox}
@@ -412,65 +412,65 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
             Usar bbox del mapa
           </button>
         </div>
-        <p className="text-xs text-muted">
+        <p className="text-xs text-[var(--s-sub)]">
           Haz dos clics en el mapa para seleccionar el area (esquina 1 y esquina 2). Copia los
           comandos segun tu sistema.
         </p>
         <form className="space-y-3">
           <div>
-            <label className="text-xs text-muted block mb-1">mapId</label>
+            <label className="text-xs text-[var(--s-sub)] block mb-1">mapId</label>
             <input
               value={importMapId}
               onChange={(e) => setImportMapId(e.target.value)}
               placeholder="funza"
-              className="w-full px-3 py-2 bg-surface border border-border rounded-lg text-xs text-gray-600 focus:outline-none focus:border-[#2258B1]"
+              className="w-full px-3 py-2 bg-white border border-[var(--s-border)] rounded-lg text-xs text-[var(--s-text)] focus:outline-none focus:border-[#2258B1]"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="text-xs text-muted block mb-1">minLng</label>
+              <label className="text-xs text-[var(--s-sub)] block mb-1">minLng</label>
               <input
                 type="number"
                 step="0.000001"
                 value={minLng}
                 onChange={(e) => setMinLng(e.target.value)}
-                className="w-full px-3 py-2 bg-surface border border-border rounded-lg text-xs text-gray-600 focus:outline-none"
+                className="w-full px-3 py-2 bg-white border border-[var(--s-border)] rounded-lg text-xs text-[var(--s-text)] focus:outline-none"
               />
             </div>
             <div>
-              <label className="text-xs text-muted block mb-1">minLat</label>
+              <label className="text-xs text-[var(--s-sub)] block mb-1">minLat</label>
               <input
                 type="number"
                 step="0.000001"
                 value={minLat}
                 onChange={(e) => setMinLat(e.target.value)}
-                className="w-full px-3 py-2 bg-surface border border-border rounded-lg text-xs text-gray-600 focus:outline-none"
+                className="w-full px-3 py-2 bg-white border border-[var(--s-border)] rounded-lg text-xs text-[var(--s-text)] focus:outline-none"
               />
             </div>
             <div>
-              <label className="text-xs text-muted block mb-1">maxLng</label>
+              <label className="text-xs text-[var(--s-sub)] block mb-1">maxLng</label>
               <input
                 type="number"
                 step="0.000001"
                 value={maxLng}
                 onChange={(e) => setMaxLng(e.target.value)}
-                className="w-full px-3 py-2 bg-surface border border-border rounded-lg text-xs text-gray-600 focus:outline-none"
+                className="w-full px-3 py-2 bg-white border border-[var(--s-border)] rounded-lg text-xs text-[var(--s-text)] focus:outline-none"
               />
             </div>
             <div>
-              <label className="text-xs text-muted block mb-1">maxLat</label>
+              <label className="text-xs text-[var(--s-sub)] block mb-1">maxLat</label>
               <input
                 type="number"
                 step="0.000001"
                 value={maxLat}
                 onChange={(e) => setMaxLat(e.target.value)}
-                className="w-full px-3 py-2 bg-surface border border-border rounded-lg text-xs text-gray-600 focus:outline-none"
+                className="w-full px-3 py-2 bg-white border border-[var(--s-border)] rounded-lg text-xs text-[var(--s-text)] focus:outline-none"
               />
             </div>
           </div>
 
-          <div className="flex items-center justify-between text-xs text-muted">
+          <div className="flex items-center justify-between text-xs text-[var(--s-sub)]">
             <span>{bboxValid ? 'BBox valido' : 'BBox invalido'}</span>
             <button
               type="button"
@@ -486,7 +486,7 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
         <div className="space-y-2 text-xs">
           <div>
             <div className="flex items-center justify-between">
-              <p className="text-muted">Linux (Ubuntu, Debian, etc.)</p>
+              <p className="text-[var(--s-sub)]">Linux (Ubuntu, Debian, etc.)</p>
               <button
                 type="button"
                 onClick={() => copyCommand(linuxCommand, 'linux')}
@@ -495,13 +495,13 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
                 {copiedKey === 'linux' ? 'Copiado' : 'Copiar'}
               </button>
             </div>
-            <pre className="bg-surface border border-border rounded-lg p-2 text-gray-600 overflow-auto">
+            <pre className="bg-[var(--s-gray)] border border-[var(--s-border)] rounded-lg p-2 text-[var(--s-text)] overflow-auto">
               {linuxCommand}
             </pre>
           </div>
           <div>
             <div className="flex items-center justify-between">
-              <p className="text-muted">Windows (PowerShell)</p>
+              <p className="text-[var(--s-sub)]">Windows (PowerShell)</p>
               <button
                 type="button"
                 onClick={() => copyCommand(windowsCommand, 'windows')}
@@ -510,13 +510,13 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
                 {copiedKey === 'windows' ? 'Copiado' : 'Copiar'}
               </button>
             </div>
-            <pre className="bg-surface border border-border rounded-lg p-2 text-gray-600 overflow-auto">
+            <pre className="bg-[var(--s-gray)] border border-[var(--s-border)] rounded-lg p-2 text-[var(--s-text)] overflow-auto">
               {windowsCommand}
             </pre>
           </div>
           <div>
             <div className="flex items-center justify-between">
-              <p className="text-muted">Procesar con Go</p>
+              <p className="text-[var(--s-sub)]">Procesar con Go</p>
               <button
                 type="button"
                 onClick={() => copyCommand(goCommand, 'go')}
@@ -525,7 +525,7 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
                 {copiedKey === 'go' ? 'Copiado' : 'Copiar'}
               </button>
             </div>
-            <pre className="bg-surface border border-border rounded-lg p-2 text-gray-600 overflow-auto">
+            <pre className="bg-[var(--s-gray)] border border-[var(--s-border)] rounded-lg p-2 text-[var(--s-text)] overflow-auto">
               {goCommand}
             </pre>
           </div>
@@ -533,14 +533,14 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
       </section>
 
       <section className="space-y-2">
-        <h3 className="text-sm text-gray-600 font-medium">Crear simulacion</h3>
+        <h3 className="text-sm text-[var(--s-text)] font-medium">Crear simulacion</h3>
         <form onSubmit={createNewSimulation} className="space-y-3">
           <div>
-            <label className="text-xs text-muted block mb-1">Mapa</label>
+            <label className="text-xs text-[var(--s-sub)] block mb-1">Mapa</label>
             <select
               value={mapId}
               onChange={(e) => setMapId(e.target.value)}
-              className="w-full px-3 py-2 bg-surface border border-border rounded-lg text-xs text-gray-600 focus:outline-none focus:border-[#2258B1]"
+              className="w-full px-3 py-2 bg-white border border-[var(--s-border)] rounded-lg text-xs text-[var(--s-text)] focus:outline-none focus:border-[#2258B1]"
             >
               <option value="">Selecciona un mapa</option>
               {maps.map((map) => (
@@ -552,17 +552,17 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
           </div>
 
           <div>
-            <label className="text-xs text-muted block mb-1">Vehiculos</label>
+            <label className="text-xs text-[var(--s-sub)] block mb-1">Vehiculos</label>
             <input
               type="number"
               min={1}
               value={nVehicles}
               onChange={(e) => setNVehicles(Number(e.target.value))}
-              className="w-full px-3 py-2 bg-surface border border-border rounded-lg text-xs text-gray-600 focus:outline-none focus:border-[#2258B1]"
+              className="w-full px-3 py-2 bg-white border border-[var(--s-border)] rounded-lg text-xs text-[var(--s-text)] focus:outline-none focus:border-[#2258B1]"
             />
           </div>
 
-          <label className="flex items-center gap-2 text-xs text-muted">
+          <label className="flex items-center gap-2 text-xs text-[var(--s-sub)]">
             <input
               type="checkbox"
               checked={useDriverMix}
@@ -575,7 +575,7 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
           {useDriverMix && (
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="text-xs text-muted block mb-1">Aggressive</label>
+                <label className="text-xs text-[var(--s-sub)] block mb-1">Aggressive</label>
                 <input
                   type="number"
                   min={0}
@@ -583,11 +583,11 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
                   step={0.05}
                   value={aggressive}
                   onChange={(e) => setAggressive(Number(e.target.value))}
-                  className="w-full px-3 py-2 bg-surface border border-border rounded-lg text-xs text-gray-600 focus:outline-none"
+                  className="w-full px-3 py-2 bg-white border border-[var(--s-border)] rounded-lg text-xs text-[var(--s-text)] focus:outline-none"
                 />
               </div>
               <div>
-                <label className="text-xs text-muted block mb-1">Normal</label>
+                <label className="text-xs text-[var(--s-sub)] block mb-1">Normal</label>
                 <input
                   type="number"
                   min={0}
@@ -595,11 +595,11 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
                   step={0.05}
                   value={normal}
                   onChange={(e) => setNormal(Number(e.target.value))}
-                  className="w-full px-3 py-2 bg-surface border border-border rounded-lg text-xs text-gray-600 focus:outline-none"
+                  className="w-full px-3 py-2 bg-white border border-[var(--s-border)] rounded-lg text-xs text-[var(--s-text)] focus:outline-none"
                 />
               </div>
               <div>
-                <label className="text-xs text-muted block mb-1">Cautious</label>
+                <label className="text-xs text-[var(--s-sub)] block mb-1">Cautious</label>
                 <input
                   type="number"
                   min={0}
@@ -607,11 +607,11 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
                   step={0.05}
                   value={cautious}
                   onChange={(e) => setCautious(Number(e.target.value))}
-                  className="w-full px-3 py-2 bg-surface border border-border rounded-lg text-xs text-gray-600 focus:outline-none"
+                  className="w-full px-3 py-2 bg-white border border-[var(--s-border)] rounded-lg text-xs text-[var(--s-text)] focus:outline-none"
                 />
               </div>
               <div>
-                <label className="text-xs text-muted block mb-1">Truck</label>
+                <label className="text-xs text-[var(--s-sub)] block mb-1">Truck</label>
                 <input
                   type="number"
                   min={0}
@@ -619,11 +619,11 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
                   step={0.05}
                   value={truck}
                   onChange={(e) => setTruck(Number(e.target.value))}
-                  className="w-full px-3 py-2 bg-surface border border-border rounded-lg text-xs text-gray-600 focus:outline-none"
+                  className="w-full px-3 py-2 bg-white border border-[var(--s-border)] rounded-lg text-xs text-[var(--s-text)] focus:outline-none"
                 />
               </div>
               <div>
-                <label className="text-xs text-muted block mb-1">Bus</label>
+                <label className="text-xs text-[var(--s-sub)] block mb-1">Bus</label>
                 <input
                   type="number"
                   min={0}
@@ -631,10 +631,10 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
                   step={0.05}
                   value={bus}
                   onChange={(e) => setBus(Number(e.target.value))}
-                  className="w-full px-3 py-2 bg-surface border border-border rounded-lg text-xs text-gray-600 focus:outline-none"
+                  className="w-full px-3 py-2 bg-white border border-[var(--s-border)] rounded-lg text-xs text-[var(--s-text)] focus:outline-none"
                 />
               </div>
-              <div className="flex items-end text-xs text-muted">
+              <div className="flex items-end text-xs text-[var(--s-sub)]">
                 Suma: {driverMixSum.toFixed(2)}
               </div>
             </div>
@@ -689,17 +689,17 @@ function EntityList({
 
   if (items.length === 0) {
     return (
-      <div className="p-4 text-center text-muted text-sm">No {type}s in simulation.</div>
+      <div className="p-4 text-center text-[var(--s-sub)] text-sm">No {type}s in simulation.</div>
     );
   }
 
   return (
-    <div className="divide-y divide-[#E5E7EB] border-y border-[#E5E7EB]">
+    <div className="divide-y divide-[var(--s-border)] border-y border-[var(--s-border)]">
       {items.map((item) => (
         <div key={item.id} className="px-4 py-3 flex items-center justify-between">
           <div>
-            <p className="text-sm text-gray-600">{item.name}</p>
-            <p className="text-xs text-muted font-mono">{item.id}</p>
+            <p className="text-sm text-[var(--s-text)]">{item.name}</p>
+            <p className="text-xs text-[var(--s-sub)] font-mono">{item.id}</p>
           </div>
           <button
             onClick={() => remove(item.id)}
@@ -770,7 +770,7 @@ function AddEntityForm({ simSocket }: { simSocket: RefObject<Socket | null> }) {
             type="button"
             onClick={() => setType(t)}
             className={`flex-1 py-1.5 text-xs rounded transition-colors ${
-              type === t ? 'bg-[#2258B1] text-white font-medium' : 'bg-surface text-muted border border-border'
+               type === t ? 'bg-[#2258B1] text-white font-medium' : 'bg-white text-[var(--s-sub)] border border-[var(--s-border)]'
             }`}
           >
             {t === 'vehicle' ? 'Vehicle' : 'Traffic Light'}
@@ -779,11 +779,11 @@ function AddEntityForm({ simSocket }: { simSocket: RefObject<Socket | null> }) {
       </div>
 
       <div>
-        <label className="text-xs text-muted block mb-1">Name (optional)</label>
+        <label className="text-xs text-[var(--s-sub)] block mb-1">Name (optional)</label>
         <input
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full px-3 py-2 bg-surface border border-border rounded-lg text-sm text-gray-600 focus:outline-none focus:border-[#2258B1]"
+          className="w-full px-3 py-2 bg-white border border-[var(--s-border)] rounded-lg text-sm text-[var(--s-text)] focus:outline-none focus:border-[#2258B1]"
           placeholder="Auto-generated if empty"
         />
       </div>
@@ -791,11 +791,11 @@ function AddEntityForm({ simSocket }: { simSocket: RefObject<Socket | null> }) {
       {type === 'vehicle' && (
         <>
           <div>
-            <label className="text-xs text-muted block mb-1">Profile</label>
+            <label className="text-xs text-[var(--s-sub)] block mb-1">Profile</label>
             <select
               value={profile}
               onChange={(e) => setProfile(e.target.value as typeof profile)}
-              className="w-full px-3 py-2 bg-surface border border-border rounded-lg text-sm text-gray-600 focus:outline-none focus:border-[#2258B1]"
+              className="w-full px-3 py-2 bg-white border border-[var(--s-border)] rounded-lg text-sm text-[var(--s-text)] focus:outline-none focus:border-[#2258B1]"
             >
               <option value="aggressive">Aggressive</option>
               <option value="normal">Normal</option>
@@ -805,18 +805,18 @@ function AddEntityForm({ simSocket }: { simSocket: RefObject<Socket | null> }) {
             </select>
           </div>
           <div>
-            <label className="text-xs text-muted block mb-1">Count</label>
+            <label className="text-xs text-[var(--s-sub)] block mb-1">Count</label>
             <input
               type="number"
               min={1}
               step={1}
               value={count}
               onChange={(e) => setCount(Number(e.target.value))}
-              className="w-full px-3 py-2 bg-surface border border-border rounded-lg text-sm text-gray-600 focus:outline-none focus:border-[#2258B1]"
+              className="w-full px-3 py-2 bg-white border border-[var(--s-border)] rounded-lg text-sm text-[var(--s-text)] focus:outline-none focus:border-[#2258B1]"
             />
           </div>
           <div>
-            <label className="text-xs text-muted block mb-1">Speed — {speed.toFixed(2)} km/h</label>
+            <label className="text-xs text-[var(--s-sub)] block mb-1">Speed — {speed.toFixed(2)} km/h</label>
             <input
               type="range"
               min={5}
@@ -827,13 +827,13 @@ function AddEntityForm({ simSocket }: { simSocket: RefObject<Socket | null> }) {
             />
           </div>
           <div>
-            <label className="text-xs text-muted block mb-1">Color</label>
+            <label className="text-xs text-[var(--s-sub)] block mb-1">Color</label>
             <div className="flex items-center gap-2">
               <input
                 type="color"
                 value={color}
                 onChange={(e) => setColor(e.target.value)}
-                className="w-9 h-9 rounded border border-border bg-surface cursor-pointer"
+                className="w-9 h-9 rounded border border-[var(--s-border)] bg-white cursor-pointer"
               />
               <span className="text-sm text-gray-600 font-mono">{color}</span>
             </div>
@@ -845,36 +845,36 @@ function AddEntityForm({ simSocket }: { simSocket: RefObject<Socket | null> }) {
         <>
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="text-xs text-muted block mb-1">Latitude</label>
+              <label className="text-xs text-[var(--s-sub)] block mb-1">Latitude</label>
               <input
                 type="number"
                 step="0.0001"
                 value={lat}
                 onChange={(e) => setLat(Number(e.target.value))}
-                className="w-full px-3 py-2 bg-surface border border-border rounded-lg text-sm text-gray-600 focus:outline-none"
+                className="w-full px-3 py-2 bg-white border border-[var(--s-border)] rounded-lg text-sm text-[var(--s-text)] focus:outline-none"
               />
             </div>
             <div>
-              <label className="text-xs text-muted block mb-1">Longitude</label>
+              <label className="text-xs text-[var(--s-sub)] block mb-1">Longitude</label>
               <input
                 type="number"
                 step="0.0001"
                 value={lon}
                 onChange={(e) => setLon(Number(e.target.value))}
-                className="w-full px-3 py-2 bg-surface border border-border rounded-lg text-sm text-gray-600 focus:outline-none"
+                className="w-full px-3 py-2 bg-white border border-[var(--s-border)] rounded-lg text-sm text-[var(--s-text)] focus:outline-none"
               />
             </div>
           </div>
           <div>
-            <label className="text-xs text-muted block mb-1">Green duration — {green}s</label>
+            <label className="text-xs text-[var(--s-sub)] block mb-1">Green duration — {green}s</label>
             <input type="range" min={2} max={120} value={green} onChange={(e) => setGreen(Number(e.target.value))} className="w-full accent-green-500" />
           </div>
           <div>
-            <label className="text-xs text-muted block mb-1">Yellow duration — {yellow}s</label>
+            <label className="text-xs text-[var(--s-sub)] block mb-1">Yellow duration — {yellow}s</label>
             <input type="range" min={1} max={30} value={yellow} onChange={(e) => setYellow(Number(e.target.value))} className="w-full accent-yellow-400" />
           </div>
           <div>
-            <label className="text-xs text-muted block mb-1">Red duration — {red}s</label>
+            <label className="text-xs text-[var(--s-sub)] block mb-1">Red duration — {red}s</label>
             <input type="range" min={2} max={120} value={red} onChange={(e) => setRed(Number(e.target.value))} className="w-full accent-red-500" />
           </div>
         </>

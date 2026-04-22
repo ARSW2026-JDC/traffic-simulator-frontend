@@ -63,7 +63,7 @@ export default function ChatPanel({ chatSocket }: Props) {
       </div>
 
       {canChat ? (
-        <div className="p-3 border-t border-border shrink-0">
+        <div className="p-3 border-t border-[var(--s-border)] shrink-0">
           <div className="flex gap-2">
             <input
               value={input}
@@ -71,7 +71,7 @@ export default function ChatPanel({ chatSocket }: Props) {
               onKeyDown={handleKey}
               placeholder="Send a message..."
               maxLength={500}
-              className="flex-1 px-3 py-2 bg-surface border border-border rounded-lg text-sm text-black placeholder:text-muted focus:outline-none focus:border-blue-500"
+              className="flex-1 px-3 py-2 bg-surface border border-[var(--s-border)] rounded-lg text-sm text-black placeholder:text-muted focus:outline-none focus:border-blue-500"
             />
             <button
               onClick={send}
@@ -83,7 +83,7 @@ export default function ChatPanel({ chatSocket }: Props) {
           </div>
         </div>
       ) : (
-        <div className="p-3 border-t border-border text-center text-xs text-muted">
+        <div className="p-3 border-t border-[var(--s-border)] text-center text-xs text-muted">
           Guest mode — chat disabled
         </div>
       )}
