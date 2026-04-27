@@ -42,14 +42,14 @@ export async function getAllUsers() {
 }
 
 export async function getChatMessages(limit = 50, cursor?: string) {
-  const params: any = { limit };
+  const params: any = { limit: String(limit) };
   if (cursor) params.cursor = cursor;
   const res = await api.get('/api/chat/messages', { params });
   return res.data;
 }
 
 export async function getHistory(limit = 50, cursor?: string, simId?: string) {
-  const params: any = { limit };
+  const params: any = { limit: String(limit) };
   if (cursor) params.cursor = cursor;
   if (simId) params.simId = simId;
   const res = await api.get('/api/history', { params });
@@ -57,17 +57,17 @@ export async function getHistory(limit = 50, cursor?: string, simId?: string) {
 }
 
 export async function getSimulations() {
-  const res = await api.get('/sim');
+  const res = await api.get('/sim/sim');
   return res.data;
 }
 
 export async function getSimulationById(simId: string) {
-  const res = await api.get(`/sim/${simId}`);
+  const res = await api.get(`/sim/sim/${simId}`);
   return res.data;
 }
 
 export async function deleteSimulationById(simId: string) {
-  const res = await api.delete(`/sim/${simId}`);
+  const res = await api.delete(`/sim/sim/${simId}`);
   return res.data;
 }
 
@@ -82,12 +82,12 @@ export async function createSimulation(payload: {
     bus: number;
   };
 }) {
-  const res = await api.post('/sim', payload);
+  const res = await api.post('/sim/sim', payload);
   return res.data;
 }
 
 export async function getAvailableMaps() {
-  const res = await api.get('/sim/maps/available');
+  const res = await api.get('/sim/sim/maps/available');
   return res.data;
 }
 
