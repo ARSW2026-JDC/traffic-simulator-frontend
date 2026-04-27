@@ -19,7 +19,7 @@ Interfaz de usuario para la aplicación de simulación de tráfico CUTS. Permite
 - **[Firebase](https://firebase.google.com/)** v10.14.1 - Autenticación
 - **[Axios](https://axios-http.com/)** v1.6.2 - HTTP client
 
-## 📋 Prerrequisitos
+## Prerrequisitos
 
 - Node.js >= 18.x
 - npm >= 9.x
