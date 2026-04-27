@@ -57,17 +57,17 @@ export async function getHistory(limit = 50, cursor?: string, simId?: string) {
 }
 
 export async function getSimulations() {
-  const res = await api.get('/sim/sim');
+  const res = await api.get('/sim');
   return res.data;
 }
 
 export async function getSimulationById(simId: string) {
-  const res = await api.get(`/sim/sim/${simId}`);
+  const res = await api.get(`/sim/${simId}`);
   return res.data;
 }
 
 export async function deleteSimulationById(simId: string) {
-  const res = await api.delete(`/sim/sim/${simId}`);
+  const res = await api.delete(`/sim/${simId}`);
   return res.data;
 }
 
@@ -82,12 +82,12 @@ export async function createSimulation(payload: {
     bus: number;
   };
 }) {
-  const res = await api.post('/sim/sim', payload);
+  const res = await api.post('/sim', payload);
   return res.data;
 }
 
 export async function getAvailableMaps() {
-  const res = await api.get('/sim/sim/maps/available');
+  const res = await api.get('/sim/maps/available');
   return res.data;
 }
 
