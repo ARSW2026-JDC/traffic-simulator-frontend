@@ -8,7 +8,7 @@ import HistoryPanel from '../HistoryPanel/HistoryPanel';
 type RightTab = 'chat' | 'history';
 
 interface Props {
-  chatSocket: RefObject<Socket | null>;
+  chatSocket: { socketRef: RefObject<Socket | null>; pendingTimers: React.MutableRefObject<Map<string, ReturnType<typeof setTimeout>>> };
 }
 
 export default function RightPanel({ chatSocket }: Props) {
@@ -37,7 +37,7 @@ export default function RightPanel({ chatSocket }: Props) {
       </div>
 
       <div className="sim-right-content">
-        {tab === 'chat' && <ChatPanel chatSocket={chatSocket} />}
+        {tab === 'chat' && <ChatPanel chatSocket={chatSocket.socketRef} pendingTimers={chatSocket.pendingTimers} />}
         {tab === 'history' && <HistoryPanel />}
       </div>
     </aside>

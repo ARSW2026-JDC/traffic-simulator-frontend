@@ -4,6 +4,7 @@ export interface UserProfile {
   id: string;
   email: string;
   name: string | null;
+  avatarUrl?: string | null;
   role: UserRole;
   createdAt: string;
 }
@@ -63,6 +64,8 @@ export interface ChatMessage {
   userName: string;
   content: string;
   timestamp: number;
+  clientId?: string;
+  status?: 'pending' | 'sent' | 'failed';
 }
 
 export interface ChangeLogEntry {

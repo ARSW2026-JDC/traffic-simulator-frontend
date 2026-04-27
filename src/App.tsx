@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useEffect } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from './services/firebase';
 import { useAuthStore } from './stores/authStore';
 import AuthPage from './pages/AuthPage';
@@ -10,7 +10,7 @@ import { verifyToken } from './services/api';
 import { User } from 'firebase/auth/cordova';
 
 export default function App() {
-  const { firebaseUser, setFirebaseUser, setUser, setLoading } = useAuthStore();
+  const { firebaseUser, user, setFirebaseUser, setUser, setLoading, isLoading } = useAuthStore();
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (fbUser: User | null) => {
@@ -23,6 +23,12 @@ export default function App() {
           setUser(profile);
         } catch {
           setUser(null);
+          setFirebaseUser(null, null);
+          try {
+            await signOut(auth);
+          } catch {
+            // Ignore remote sign-out failures.
+          }
         }
       } else {
         setFirebaseUser(null, null);
@@ -40,7 +46,7 @@ export default function App() {
         <Route path="/auth" element={<AuthPage />} />
         <Route
           path="/"
-          element={firebaseUser ? <SimulationPage /> : <Navigate to="/landing" replace />}
+          element={isLoading ? null : firebaseUser && user ? <SimulationPage /> : <Navigate to="/landing" replace />}
         />
         <Route path="*" element={<Navigate to="/landing" replace />} />
       </Routes>
