@@ -28,6 +28,7 @@ export default function SimNavbar({ simSocket: _simSocket, onToggleLeft }: Props
   };
 
   const displayName = user?.name || firebaseUser?.displayName || user?.email || 'Usuario';
+  const avatarUrl = user?.avatarUrl || firebaseUser?.photoURL || null;
 
   return (
     <header className="sim-nav">
@@ -56,10 +57,14 @@ export default function SimNavbar({ simSocket: _simSocket, onToggleLeft }: Props
         <div className="sim-nav-user">
           <span>{displayName}</span>
           <div className="sim-nav-avatar">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
-              <circle cx="12" cy="7" r="4"/>
-            </svg>
+            {avatarUrl ? (
+              <img src={avatarUrl} alt={displayName} />
+            ) : (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+            )}
           </div>
         </div>
         <button className="sim-nav-logout" onClick={handleLogout} title="Cerrar sesión">

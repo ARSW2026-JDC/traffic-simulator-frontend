@@ -48,9 +48,10 @@ export async function getChatMessages(limit = 50, cursor?: string) {
   return res.data;
 }
 
-export async function getHistory(limit = 50, cursor?: string) {
+export async function getHistory(limit = 50, cursor?: string, simId?: string) {
   const params: any = { limit };
   if (cursor) params.cursor = cursor;
+  if (simId) params.simId = simId;
   const res = await api.get('/api/history', { params });
   return res.data;
 }

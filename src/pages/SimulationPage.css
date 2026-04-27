@@ -125,12 +125,20 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  overflow: hidden;
 }
 
 .sim-nav-avatar svg {
   width: 18px;
   height: 18px;
   color: var(--s-sub);
+}
+
+.sim-nav-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .sim-nav-logout {
