@@ -29,7 +29,11 @@ export default function SimulationPage() {
         <div className="sim-map">
           <MapView simSocket={simSocket} />
         </div>
-        <RightPanel chatSocket={chatSocket} />
+        <RightPanel
+          chatSocket={chatSocket}
+          openMobile={usersOpen}
+          onCloseMobile={() => setUsersOpen(false)}
+        />
       </div>
       
       {usersOpen && (
