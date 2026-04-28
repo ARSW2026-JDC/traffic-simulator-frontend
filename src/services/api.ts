@@ -91,4 +91,9 @@ export async function getAvailableMaps() {
   return res.data;
 }
 
+export async function updateUserEstatus(id: string, estatus: string) {
+  const res = await api.patch(`/api/users/${id}/estatus`, { estatus });
+  return res.data;
+}
+
 export default api;

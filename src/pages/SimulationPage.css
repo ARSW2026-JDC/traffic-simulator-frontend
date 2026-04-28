@@ -155,6 +155,24 @@
 }
 .sim-nav-logout:hover { background: var(--s-gray); }
 
+.sim-nav-users {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid var(--s-border);
+  background: var(--s-white);
+  color: var(--s-text);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.sim-nav-users:hover {
+  background: var(--s-gray);
+}
+
 .sim-nav-menu {
   display: none;
   align-items: center;

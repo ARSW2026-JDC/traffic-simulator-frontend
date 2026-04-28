@@ -16,7 +16,7 @@ interface Props {
 export default function RightPanel({ chatSocket, openMobile, onCloseMobile }: Props) {
   const [tab, setTab] = useState<RightTab>('chat');
   const { isConnected, messages } = useChatStore();
-  const unread = Math.min(messages.length, 99);
+  void onCloseMobile;
 
   return (
     <aside className={`sim-right-panel slim ${openMobile ? 'mobile-open' : ''}`}>

@@ -5,12 +5,13 @@ import MapView from '../components/MapView/MapView';
 import LeftPanel from '../components/Sidebar/LeftPanel';
 import RightPanel from '../components/Sidebar/RightPanel';
 import SimNavbar from '../components/Navbar/Navbar';
+import UserManagementModal from '../components/UserManagementModal/UserManagementModal';
 import { useState } from 'react';
 import '../pages/SimulationPage.css';
 
 export default function SimulationPage() {
   const [leftOpen, setLeftOpen] = useState(false);
-  const [rightOpen, setRightOpen] = useState(false);
+  const [usersOpen, setUsersOpen] = useState(false);
   const simSocket = useSimulationSocket();
   const chatSocket = useChatSocket();
   const historySocket = useHistorySocket();
@@ -18,10 +19,10 @@ export default function SimulationPage() {
 
   return (
     <div className="sim-root">
-      <SimNavbar
-        simSocket={simSocket}
+      <SimNavbar 
+        simSocket={simSocket} 
         onToggleLeft={() => setLeftOpen((prev) => !prev)}
-        onToggleRight={() => setRightOpen((prev) => !prev)}
+        onToggleUsers={() => setUsersOpen((prev) => !prev)}
       />
       <div className="sim-body">
         <LeftPanel simSocket={simSocket} openMobile={leftOpen} onCloseMobile={() => setLeftOpen(false)} />
@@ -30,10 +31,14 @@ export default function SimulationPage() {
         </div>
         <RightPanel
           chatSocket={chatSocket}
-          openMobile={rightOpen}
-          onCloseMobile={() => setRightOpen(false)}
+          openMobile={usersOpen}
+          onCloseMobile={() => setUsersOpen(false)}
         />
       </div>
+      
+      {usersOpen && (
+        <UserManagementModal onClose={() => setUsersOpen(false)} />
+      )}
     </div>
   );
 }
