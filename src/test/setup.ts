@@ -12,16 +12,22 @@ global.ResizeObserver = vi.fn().mockImplementation(() => ({
   disconnect: vi.fn(),
 }));
 
+global.HTMLElement.prototype.scrollIntoView = vi.fn();
+
 vi.mock('firebase/app', () => ({
   initializeApp: vi.fn(() => ({})),
 }));
 
 vi.mock('firebase/auth', () => ({
-  getAuth: vi.fn(() => ({
-    currentUser: null,
-  })),
+  getAuth: vi.fn(() => ({ currentUser: null })),
   onAuthStateChanged: vi.fn((_auth: unknown, callback: (user: null) => void) => {
     callback(null);
     return vi.fn();
   }),
+  signInWithEmailAndPassword: vi.fn(),
+  createUserWithEmailAndPassword: vi.fn(),
+  signInAnonymously: vi.fn(),
+  signInWithPopup: vi.fn(),
+  signOut: vi.fn(),
+  GoogleAuthProvider: vi.fn(() => ({})),
 }));
