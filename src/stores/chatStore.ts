@@ -54,7 +54,7 @@ export const useChatStore = create<ChatStore>((set) => ({
     set((state) => {
       const serverIds = new Set(serverMessages.map((m) => m.id));
       const keepLocal = state.messages.filter(
-        (m) => m.status === 'pending' || m.status === 'failed' || serverIds.has(m.id),
+        (m) => (m.status === 'pending' || m.status === 'failed') && !serverIds.has(m.id),
       );
       const merged = [...serverMessages, ...keepLocal];
       merged.sort((a, b) => a.timestamp - b.timestamp);
