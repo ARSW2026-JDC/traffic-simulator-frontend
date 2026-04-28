@@ -10,9 +10,10 @@ import cutsLogo from '../../assets/cuts_logo.png';
 interface Props {
   simSocket: RefObject<Socket | null>;
   onToggleLeft?: () => void;
+  onToggleRight?: () => void;
 }
 
-export default function SimNavbar({ simSocket: _simSocket, onToggleLeft }: Props) {
+export default function SimNavbar({ simSocket: _simSocket, onToggleLeft, onToggleRight }: Props) {
   const { user, firebaseUser, logout } = useAuthStore();
   const { isConnected } = useSimulationStore();
   const navigate = useNavigate();
@@ -51,8 +52,11 @@ export default function SimNavbar({ simSocket: _simSocket, onToggleLeft }: Props
 
       {/* Right side */}
       <div className="sim-nav-right">
-        <button className="sim-nav-menu" onClick={onToggleLeft} title="Mostrar panel" type="button">
+        <button className="sim-nav-menu" onClick={onToggleLeft} title="Mostrar panel izquierdo" type="button">
           ☰
+        </button>
+        <button className="sim-nav-menu sim-nav-menu--right" onClick={onToggleRight} title="Mostrar chat e historial" type="button">
+          💬
         </button>
         <div className="sim-nav-user">
           <span>{displayName}</span>

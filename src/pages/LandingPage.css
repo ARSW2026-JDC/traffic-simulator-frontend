@@ -248,3 +248,155 @@
   .cuts-nav { padding: 0 4vw; }
   .cuts-brand-text { font-size: .78rem; }
 }
+
+@media (max-width: 768px) {
+  .cuts-nav {
+    padding: 0 1.5rem;
+    height: 64px;
+  }
+  .cuts-logo-img {
+    width: 40px;
+    height: 40px;
+  }
+  .cuts-brand-text {
+    font-size: 0.9rem;
+  }
+  .cuts-hero {
+    padding: 2rem 5vw 1.5rem;
+    gap: 2rem;
+  }
+  .cuts-hero-title {
+    font-size: 1.75rem;
+  }
+  .cuts-hero-sub {
+    font-size: 0.9rem;
+    max-width: 100%;
+  }
+  .cuts-btn-cta {
+    padding: 0.65rem 1.5rem;
+    font-size: 0.9rem;
+  }
+  .cuts-stats {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .cuts-stat {
+    min-width: 80px;
+  }
+  .cuts-hero-img {
+    height: 250px;
+  }
+  .cuts-feature-card {
+    padding: 1.4rem 1.2rem;
+  }
+  .cuts-footer {
+    padding: 1rem;
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .cuts-nav {
+    padding: 0 1rem;
+    height: 56px;
+  }
+  .cuts-logo-img {
+    width: 36px;
+    height: 36px;
+  }
+  .cuts-brand-text {
+    display: none;
+  }
+  .cuts-nav-actions {
+    gap: 0.5rem;
+  }
+  .cuts-btn-ghost,
+  .cuts-btn-primary {
+    padding: 0.5rem 0.85rem;
+    font-size: 0.85rem;
+  }
+  .cuts-hero {
+    padding: 1.5rem 1rem 1.25rem;
+    gap: 1.5rem;
+  }
+  .cuts-hero-title {
+    font-size: 1.5rem;
+  }
+  .cuts-hero-sub {
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+  .cuts-stats {
+    gap: 0.75rem;
+  }
+  .cuts-stat-num {
+    font-size: 1.25rem;
+  }
+  .cuts-stat-label {
+    font-size: 0.65rem;
+  }
+  .cuts-stats-divider {
+    height: 28px;
+  }
+  .cuts-hero-img {
+    height: 200px;
+  }
+  .cuts-features {
+    padding: 1.5rem 1rem;
+    gap: 1rem;
+  }
+  .cuts-feature-card h3 {
+    font-size: 0.9rem;
+  }
+  .cuts-feature-card p {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .cuts-nav {
+    padding: 0 0.75rem;
+  }
+  .cuts-logo-img {
+    width: 32px;
+    height: 32px;
+  }
+  .cuts-btn-ghost,
+  .cuts-btn-primary {
+    padding: 0.45rem 0.7rem;
+    font-size: 0.8rem;
+    border-radius: 6px;
+  }
+  .cuts-hero {
+    padding: 1.25rem 0.75rem 1rem;
+  }
+  .cuts-hero-title {
+    font-size: 1.25rem;
+  }
+  .cuts-hero-sub {
+    font-size: 0.8rem;
+  }
+  .cuts-stats {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  .cuts-stats-divider {
+    width: 100%;
+    height: 1px;
+  }
+  .cuts-hero-img {
+    height: 180px;
+    border-radius: 12px;
+  }
+  .cuts-features {
+    padding: 1.25rem 0.75rem;
+  }
+  .cuts-feature-card {
+    padding: 1rem 0.85rem;
+    border-radius: 10px;
+  }
+  .cuts-footer {
+    font-size: 0.7rem;
+  }
+}

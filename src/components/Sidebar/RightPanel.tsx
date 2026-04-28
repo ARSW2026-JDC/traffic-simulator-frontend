@@ -9,15 +9,20 @@ type RightTab = 'chat' | 'history';
 
 interface Props {
   chatSocket: { socketRef: RefObject<Socket | null>; pendingTimers: React.MutableRefObject<Map<string, ReturnType<typeof setTimeout>>> };
+  openMobile?: boolean;
+  onCloseMobile?: () => void;
 }
 
-export default function RightPanel({ chatSocket }: Props) {
+export default function RightPanel({ chatSocket, openMobile, onCloseMobile }: Props) {
   const [tab, setTab] = useState<RightTab>('chat');
   const { isConnected, messages } = useChatStore();
   const unread = Math.min(messages.length, 99);
 
   return (
-    <aside className="sim-right-panel slim">
+    <aside className={`sim-right-panel slim ${openMobile ? 'mobile-open' : ''}`}>
+      <button className="sim-mobile-close" onClick={onCloseMobile} type="button">
+        Cerrar
+      </button>
       <div className="sim-right-tabs two-cols">
         <button
           onClick={() => setTab('chat')}
