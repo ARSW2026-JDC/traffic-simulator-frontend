@@ -314,7 +314,7 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
                 </div>
                 <p className="text-xs text-[var(--s-sub)] font-mono">{sim.simId}</p>
                 <div className="text-xs text-[var(--s-sub)]">
-                  <span>{sim.createdBy}</span>
+                  <span>{sim.createdByName || sim.createdByUid}</span>
                   <span className="mx-2">•</span>
                   <span>{sim.nodeId}</span>
                   <span className="mx-2">•</span>
@@ -360,7 +360,7 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
             </div>
             <p className="text-[var(--s-sub)] font-mono">{single.simId}</p>
             <div className="text-[var(--s-sub)]">
-              <span>{single.createdBy}</span>
+              <span>{single.createdByName || single.createdByUid}</span>
               <span className="mx-2">•</span>
               <span>{single.nodeId}</span>
               <span className="mx-2">•</span>

@@ -53,7 +53,8 @@ export interface SimulationSummary {
   simId: string;
   mapId: string;
   nVehicles: number;
-  createdBy: string;
+  createdByUid: string;
+  createdByName: string;
   nodeId: string;
   createdAt: number;
 }
