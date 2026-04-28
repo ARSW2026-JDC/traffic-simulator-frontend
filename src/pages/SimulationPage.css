@@ -187,6 +187,10 @@
   font-size: 1rem;
 }
 
+.sim-nav-menu--right {
+  margin-left: 0.25rem;
+}
+
 /* ── Body: three columns ── */
 .sim-body {
   display: flex;
@@ -772,6 +776,10 @@
     display: inline-flex;
   }
 
+  .sim-nav-menu--right {
+    display: inline-flex;
+  }
+
   .sim-left-panel {
     position: fixed;
     top: 76px;
@@ -788,6 +796,22 @@
     transform: translateX(0);
   }
 
+  .sim-right-panel {
+    position: fixed;
+    top: 76px;
+    right: 0;
+    bottom: 0;
+    z-index: 1200;
+    width: min(84vw, 320px);
+    transform: translateX(100%);
+    transition: transform 0.25s ease;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  }
+
+  .sim-right-panel.mobile-open {
+    transform: translateX(0);
+  }
+
   .sim-mobile-close {
     display: block;
     border: 0;
@@ -801,5 +825,195 @@
 
   .sim-right-panel.slim {
     width: 240px;
+  }
+}
+
+@media (max-width: 768px) {
+  .sim-nav {
+    padding: 0 1rem;
+    height: 60px;
+  }
+
+  .sim-nav-title {
+    display: none;
+  }
+
+  .sim-nav-logo {
+    width: 32px;
+    height: 32px;
+  }
+
+  .sim-conn-status {
+    display: none;
+  }
+
+  .sim-nav-user span {
+    display: none;
+  }
+
+  .sim-body {
+    flex-direction: column;
+  }
+
+  .sim-map {
+    width: 100%;
+    height: 100%;
+  }
+
+  .sim-left-panel,
+  .sim-right-panel {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .sim-panel-tab,
+  .sim-right-tab {
+    padding: 0.8rem 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  .sim-btn {
+    min-height: 44px;
+  }
+
+  .sim-chat-send {
+    min-height: 44px;
+  }
+
+  .sim-speed-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .sim-semaphore-item {
+    min-height: 44px;
+    padding: 0.5rem 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .sim-nav {
+    padding: 0 0.75rem;
+    height: 56px;
+  }
+
+  .sim-nav-logo {
+    width: 28px;
+    height: 28px;
+  }
+
+  .sim-nav-right {
+    gap: 0.5rem;
+  }
+
+  .sim-nav-logout {
+    padding: 0.5rem;
+  }
+
+  .sim-nav-avatar {
+    width: 28px;
+    height: 28px;
+  }
+
+  .sim-left-panel,
+  .sim-right-panel {
+    width: 100%;
+  }
+
+  .sim-section {
+    padding: 0.75rem 0.75rem 0.5rem;
+  }
+
+  .sim-label {
+    font-size: 0.85rem;
+  }
+
+  .sim-check-row {
+    font-size: 0.85rem;
+    padding: 0.25rem 0;
+  }
+
+  .sim-speed-box {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .sim-section-title {
+    font-size: 0.9rem;
+  }
+
+  .sim-chat-section {
+    padding: 0.75rem 0.75rem 0.25rem;
+  }
+
+  .sim-chat-messages {
+    max-height: 180px;
+  }
+
+  .sim-chat-input {
+    padding: 0.6rem 0.75rem;
+  }
+
+  .sim-chat-send {
+    padding: 0.6rem 1rem;
+  }
+
+  .sim-history-item {
+    padding: 0.5rem 0;
+  }
+
+  .sim-user-avatar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .sim-map-zoom-controls {
+    left: 10px;
+    bottom: 10px;
+  }
+
+  .sim-map-zoom-controls button {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .sim-nav {
+    padding: 0 0.5rem;
+  }
+
+  .sim-nav-menu {
+    width: 28px;
+    height: 28px;
+    font-size: 0.9rem;
+  }
+
+  .sim-user-avatar {
+    width: 28px;
+    height: 28px;
+  }
+
+  .sim-btn {
+    padding: 0.5rem 0.25rem;
+    font-size: 0.75rem;
+  }
+
+  .sim-speed-row {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .sim-speed-row input[type="range"] {
+    width: 100%;
+  }
+
+  .sim-btn-row {
+    flex-direction: column;
+  }
+
+  .sim-btn-row .sim-btn {
+    width: 100%;
   }
 }

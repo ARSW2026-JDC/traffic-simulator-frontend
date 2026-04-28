@@ -347,7 +347,131 @@
 
 /* ── Responsive ── */
 @media (max-width: 520px) {
-  .auth-card { margin: 1rem; padding: 1.8rem 1.3rem 1.6rem; }
+  .auth-card {
+    margin: 1rem;
+    padding: 1.8rem 1.3rem 1.6rem;
+    max-width: calc(100% - 2rem);
+  }
   .auth-btn-main,
   .auth-btn-alt { width: 100%; }
+}
+
+@media (max-width: 400px) {
+  .auth-card {
+    padding: 1.5rem 1rem 1.25rem;
+    border-radius: 16px;
+  }
+  .auth-logo {
+    width: 48px;
+    height: 48px;
+  }
+  .auth-title {
+    font-size: 1.4rem;
+  }
+  .auth-subtitle {
+    font-size: 0.75rem;
+  }
+  .auth-tab {
+    padding: 0.5rem 0.35rem;
+    font-size: 0.85rem;
+  }
+  .auth-field-input {
+    padding: 0.7rem 2.4rem 0.55rem 0.85rem;
+    font-size: 0.9rem;
+  }
+  .auth-field-label {
+    font-size: 0.9rem;
+    top: 1.2rem;
+  }
+  .auth-field--lifted .auth-field-label,
+  .auth-field--focused .auth-field-label {
+    top: -0.1rem;
+    font-size: 0.68rem;
+  }
+  .auth-btn-main {
+    padding: 0.7rem 0.85rem;
+    font-size: 0.9rem;
+  }
+  .auth-btn-alt {
+    padding: 0.55rem 0.9rem;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .auth-card {
+    padding: 1.25rem 0.85rem 1rem;
+  }
+  .auth-header {
+    gap: 0.15rem;
+  }
+  .auth-logo {
+    width: 42px;
+    height: 42px;
+    margin-bottom: 0.1rem;
+  }
+  .auth-title {
+    font-size: 1.25rem;
+  }
+  .auth-form {
+    gap: 1rem;
+  }
+  .auth-field {
+    padding-top: 0.35rem;
+  }
+  .auth-field-input {
+    padding: 0.65rem 2.2rem 0.5rem 0.75rem;
+    font-size: 0.85rem;
+  }
+  .auth-field--lifted .auth-field-label,
+  .auth-field--focused .auth-field-label {
+    top: -0.15rem;
+    font-size: 0.65rem;
+  }
+  .auth-error {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.6rem;
+  }
+  .auth-alt-icon {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (max-width: 320px) {
+  .auth-root {
+    padding: 0.5rem;
+  }
+  .auth-card {
+    margin: 0.5rem;
+    padding: 1rem 0.75rem 0.85rem;
+    border-radius: 12px;
+  }
+  .auth-logo {
+    width: 38px;
+    height: 38px;
+  }
+  .auth-title {
+    font-size: 1.15rem;
+  }
+  .auth-subtitle {
+    font-size: 0.7rem;
+    max-width: 260px;
+  }
+  .auth-tabs {
+    border-radius: 8px;
+    padding: 2px;
+  }
+  .auth-tab {
+    padding: 0.45rem 0.25rem;
+    font-size: 0.8rem;
+  }
+  .auth-form {
+    gap: 0.85rem;
+  }
+  .auth-btn-main {
+    padding: 0.6rem 0.75rem;
+    font-size: 0.85rem;
+    border-radius: 8px;
+  }
 }

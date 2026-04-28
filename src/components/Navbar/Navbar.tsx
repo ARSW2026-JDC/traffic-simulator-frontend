@@ -72,6 +72,9 @@ export default function SimNavbar({ simSocket: _simSocket, onToggleLeft, onToggl
         <button className="sim-nav-menu" onClick={onToggleLeft} title="Mostrar panel" type="button">
           ☰
         </button>
+        <button className="sim-nav-menu sim-nav-menu--right" onClick={onToggleRight} title="Mostrar chat e historial" type="button">
+          💬
+        </button>
         <div className="sim-nav-user">
           <span>{displayName}</span>
           <div className="sim-nav-avatar">
