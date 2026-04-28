@@ -10,12 +10,15 @@ import cutsLogo from '../../assets/cuts_logo.png';
 interface Props {
   simSocket: RefObject<Socket | null>;
   onToggleLeft?: () => void;
+  onToggleRight?: () => void;
+  onToggleUsers?: () => void;
 }
 
-export default function SimNavbar({ simSocket: _simSocket, onToggleLeft }: Props) {
+export default function SimNavbar({ simSocket: _simSocket, onToggleLeft, onToggleRight, onToggleUsers }: Props) {
   const { user, firebaseUser, logout } = useAuthStore();
   const { isConnected } = useSimulationStore();
   const navigate = useNavigate();
+  const isAdmin = user?.role === 'ADMIN';
 
   const handleLogout = async () => {
     logout();
@@ -51,6 +54,21 @@ export default function SimNavbar({ simSocket: _simSocket, onToggleLeft }: Props
 
       {/* Right side */}
       <div className="sim-nav-right">
+        {isAdmin && onToggleUsers && (
+          <button
+            className="sim-nav-users"
+            onClick={onToggleUsers}
+            title="Gestión de usuarios"
+            type="button"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+              <path d="M16 3.13a4 4 0 010 7.75"/>
+            </svg>
+          </button>
+        )}
         <button className="sim-nav-menu" onClick={onToggleLeft} title="Mostrar panel" type="button">
           ☰
         </button>
