@@ -21,7 +21,7 @@ export function useChatSocket() {
       .catch(() => {});
 
     const socket = io(`${GATEWAY}/chat`, {
-      path: '/nrt/socket.io',
+      path: '/chat/socket.io',
       auth: { token },
       transports: ['websocket', 'polling'],
     });

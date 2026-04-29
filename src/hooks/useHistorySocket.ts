@@ -26,7 +26,7 @@ export function useHistorySocket() {
       .catch(() => setLoading(false));
 
     const socket = io(`${GATEWAY}/history`, {
-      path: '/nrt/socket.io',
+      path: '/history/socket.io',
       auth: { token, simId: activeSimId },
       transports: ['websocket', 'polling'],
     });
