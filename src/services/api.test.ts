@@ -1,6 +1,13 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 describe('API Service', () => {
+  // Mock firebase/auth before importing the api module
+  vi.mock('firebase/auth', () => ({
+    getAuth: vi.fn(),
+    inMemoryPersistence: {},
+    setPersistence: vi.fn().mockResolvedValue(undefined),
+  }));
+
   it('should export default api', async () => {
     const { default: api } = await import('../services/api');
     expect(api).toBeDefined();
