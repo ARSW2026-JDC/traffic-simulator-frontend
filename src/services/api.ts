@@ -44,7 +44,7 @@ export async function getAllUsers() {
 export async function getChatMessages(limit = 50, cursor?: string) {
   const params: any = { limit: String(limit) };
   if (cursor) params.cursor = cursor;
-  const res = await api.get('/chat/messages', { params });
+  const res = await api.get('/chat/chat/chat/messages', { params });
   return res.data;
 }
 
@@ -52,7 +52,7 @@ export async function getHistory(limit = 50, cursor?: string, simId?: string) {
   const params: any = { limit: String(limit) };
   if (cursor) params.cursor = cursor;
   if (simId) params.simId = simId;
-  const res = await api.get('/api/history', { params });
+  const res = await api.get('/history/history', { params });
   return res.data;
 }
 

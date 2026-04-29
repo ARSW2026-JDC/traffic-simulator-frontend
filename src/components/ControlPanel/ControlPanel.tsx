@@ -31,7 +31,7 @@ export default function ControlPanel({ simSocket }: Props) {
   const basemapStorageKey = `map:basemap:${user?.id ?? 'guest'}`;
 
   useEffect(() => {
-    const saved = localStorage.getItem(basemapStorageKey);
+    const saved = sessionStorage.getItem(basemapStorageKey);
     if (saved && BASEMAPS.some((entry) => entry.id === saved)) {
       setBasemapId(saved);
       return;
@@ -69,7 +69,7 @@ export default function ControlPanel({ simSocket }: Props) {
 
   const handleBasemapChange = (value: string) => {
     setBasemapId(value);
-    localStorage.setItem(basemapStorageKey, value);
+    sessionStorage.setItem(basemapStorageKey, value);
   };
 
   return (
