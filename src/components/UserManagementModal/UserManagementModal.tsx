@@ -25,6 +25,76 @@ interface Props {
   onClose: () => void;
 }
 
+function DropdownButton({ 
+  value, 
+  onChange, 
+  options, 
+  disabled 
+}: { 
+  value: string; 
+  onChange: (v: string) => void; 
+  options: { value: string; label: string }[];
+  disabled?: boolean;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    if (open) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [open]);
+
+  const handleOptionClick = (optValue: string) => {
+    onChange(optValue);
+    setOpen(false);
+  };
+
+  const currentLabel = options.find(o => o.value === value)?.label || value;
+
+  return (
+    <div className="custom-dropdown" ref={ref}>
+      <button
+        type="button"
+        className={`custom-dropdown-btn ${open ? 'open' : ''} ${disabled ? 'disabled' : ''}`}
+        onClick={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          if (!disabled) setOpen(!open);
+        }}
+        disabled={disabled}
+      >
+        <span>{currentLabel}</span>
+        <span className="custom-dropdown-arrow">▼</span>
+      </button>
+      {open && (
+        <div className="custom-dropdown-menu" onClick={(e) => e.stopPropagation()}>
+          {options.map((opt) => (
+            <button
+              key={opt.value}
+              type="button"
+              className={`custom-dropdown-item ${opt.value === value ? 'selected' : ''}`}
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                handleOptionClick(opt.value);
+              }}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function UserManagementModal({ onClose }: Props) {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
@@ -36,6 +106,7 @@ export default function UserManagementModal({ onClose }: Props) {
   const [editedUser, setEditedUser] = useState<EditedUser | null>(null);
   const [saving, setSaving] = useState(false);
   const [modalError, setModalError] = useState('');
+  const [isClosing, setIsClosing] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
 
   const loadUsers = async () => {
@@ -119,7 +190,8 @@ export default function UserManagementModal({ onClose }: Props) {
     }
   };
 
-  const handleCancel = () => {
+  const handleCancel = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
     if (hasChanges) {
       if (!window.confirm('¿Descartar los cambios?')) {
         return;
@@ -128,33 +200,23 @@ export default function UserManagementModal({ onClose }: Props) {
     closeEditModal();
   };
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        if (saving) return;
-        if (selectedUser) {
-          if (hasChanges) {
-            if (window.confirm('¿Descartar los cambios?')) {
-              closeEditModal();
-            }
-          } else {
-            closeEditModal();
-          }
-        } else {
-          onClose();
-        }
+  const handleOuterClose = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (saving || isClosing) return;
+    if (hasChanges) {
+      if (window.confirm('¿Descartar los cambios?')) {
+        closeEditModal();
       }
-    };
+    } else {
+      closeEditModal();
+    }
+  };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedUser, hasChanges, saving, closeEditModal, onClose]);
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (selectedUser && modalRef.current && !modalRef.current.contains(e.target as Node)) {
-        if (saving) return;
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      if (saving || isClosing) return;
+      if (selectedUser) {
         if (hasChanges) {
           if (window.confirm('¿Descartar los cambios?')) {
             closeEditModal();
@@ -162,12 +224,16 @@ export default function UserManagementModal({ onClose }: Props) {
         } else {
           closeEditModal();
         }
+      } else {
+        onClose();
       }
-    };
+    }
+  }, [selectedUser, hasChanges, saving, isClosing, onClose, closeEditModal]);
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [selectedUser, hasChanges, saving, closeEditModal]);
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleKeyDown]);
 
   const filteredUsers = users.filter((user) => {
     const matchesSearch =
@@ -190,10 +256,10 @@ export default function UserManagementModal({ onClose }: Props) {
 
   return (
     <div className="umm-overlay">
-      <div className="umm-popup" ref={modalRef}>
+      <div className="umm-popup" ref={modalRef} onClick={(e) => e.stopPropagation()}>
         <div className="umm-header">
           <h2>Gestión de Usuarios</h2>
-          <button onClick={onClose} className="umm-close" aria-label="Cerrar">×</button>
+          <button onClick={(e) => { e.stopPropagation(); onClose(); }} className="umm-close" aria-label="Cerrar">×</button>
         </div>
 
         <div className="umm-filters">
@@ -236,7 +302,10 @@ export default function UserManagementModal({ onClose }: Props) {
             {filteredUsers.map((user) => (
               <div
                 key={user.id}
-                onClick={() => openEditModal(user)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openEditModal(user);
+                }}
                 className="umm-user-row"
               >
                 <div className="umm-user-info">
@@ -264,8 +333,8 @@ export default function UserManagementModal({ onClose }: Props) {
       </div>
 
       {selectedUser && editedUser && (
-        <div className="umm-edit-overlay">
-          <div className="umm-edit-modal">
+        <div className="umm-edit-overlay" onClick={handleOuterClose}>
+          <div className="umm-edit-modal" onClick={(e) => e.stopPropagation()}>
             <div className="umm-edit-header">
               <h3>Editar</h3>
               <button onClick={handleCancel} className="umm-edit-close" disabled={saving}>×</button>
@@ -286,26 +355,28 @@ export default function UserManagementModal({ onClose }: Props) {
               <div className="umm-edit-fields">
                 <div className="umm-edit-field">
                   <label>Rol</label>
-                  <select
+                  <DropdownButton
                     value={editedUser.role}
-                    onChange={(e) => handleRoleChange(e.target.value as UserRole)}
+                    onChange={(v) => handleRoleChange(v as UserRole)}
+                    options={[
+                      { value: 'USER', label: 'Usuario' },
+                      { value: 'ADMIN', label: 'Administrador' }
+                    ]}
                     disabled={saving}
-                  >
-                    <option value="USER">Usuario</option>
-                    <option value="ADMIN">Administrador</option>
-                  </select>
+                  />
                 </div>
                 <div className="umm-edit-field">
                   <label>Estado</label>
-                  <select
+                  <DropdownButton
                     value={editedUser.estatus}
-                    onChange={(e) => handleEstatusChange(e.target.value as Estatus)}
+                    onChange={(v) => handleEstatusChange(v as Estatus)}
+                    options={[
+                      { value: 'ACTIVE', label: 'Activo' },
+                      { value: 'INACTIVE', label: 'Inactivo' },
+                      { value: 'BLOCKED', label: 'Bloqueado' }
+                    ]}
                     disabled={saving}
-                  >
-                    <option value="ACTIVE">Activo</option>
-                    <option value="INACTIVE">Inactivo</option>
-                    <option value="BLOCKED">Bloqueado</option>
-                  </select>
+                  />
                 </div>
               </div>
 
@@ -323,7 +394,10 @@ export default function UserManagementModal({ onClose }: Props) {
                 Cancelar
               </button>
               <button 
-                onClick={handleSave} 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleSave();
+                }} 
                 className="umm-btn umm-btn--save"
                 disabled={saving || !hasChanges}
               >

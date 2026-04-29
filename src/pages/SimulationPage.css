@@ -780,6 +780,10 @@
     display: inline-flex;
   }
 
+  .sim-nav-users {
+    display: inline-flex;
+  }
+
   .sim-left-panel {
     position: fixed;
     top: 76px;

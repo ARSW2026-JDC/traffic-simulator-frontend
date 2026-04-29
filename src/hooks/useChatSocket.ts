@@ -5,7 +5,7 @@ import { useAuthStore } from '../stores/authStore';
 import { getChatMessages } from '../services/api';
 import type { ChatMessage } from '../types';
 
-const GATEWAY = import.meta.env.VITE_GATEWAY_URL || 'http://localhost:3000';
+const GATEWAY = import.meta.env.VITE_GATEWAY_URL || 'http://localhost:3030';
 
 export function useChatSocket() {
   const socketRef = useRef<Socket | null>(null);

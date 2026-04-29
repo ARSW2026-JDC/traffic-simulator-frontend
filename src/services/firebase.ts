@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+import { getAuth, inMemoryPersistence, setPersistence } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -12,4 +12,8 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
+// Set persistence to NONE (in-memory only) to prevent sharing between tabs
+// Note: Using await here requires wrapping in an async function or using .then()
+// Since this is module-level code, we'll use .then() to handle the promise
+setPersistence(auth, inMemoryPersistence).catch(console.error);
 export default app;

@@ -21,5 +21,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
   setFirebaseUser: (firebaseUser, token) => set({ firebaseUser, token }),
   setUser: (user) => set({ user }),
   setLoading: (isLoading) => set({ isLoading }),
-  logout: () => set({ firebaseUser: null, token: null, user: null }),
+  logout: () => {
+    set({ firebaseUser: null, token: null, user: null });
+    sessionStorage.clear();
+},
 }));

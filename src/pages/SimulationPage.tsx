@@ -11,6 +11,7 @@ import '../pages/SimulationPage.css';
 
 export default function SimulationPage() {
   const [leftOpen, setLeftOpen] = useState(false);
+  const [rightOpen, setRightOpen] = useState(false);
   const [usersOpen, setUsersOpen] = useState(false);
   const simSocket = useSimulationSocket();
   const chatSocket = useChatSocket();
@@ -23,6 +24,7 @@ export default function SimulationPage() {
         simSocket={simSocket} 
         onToggleLeft={() => setLeftOpen((prev) => !prev)}
         onToggleUsers={() => setUsersOpen((prev) => !prev)}
+        onToggleRight={() => setRightOpen((prev) => !prev)}
       />
       <div className="sim-body">
         <LeftPanel simSocket={simSocket} openMobile={leftOpen} onCloseMobile={() => setLeftOpen(false)} />
@@ -31,8 +33,8 @@ export default function SimulationPage() {
         </div>
         <RightPanel
           chatSocket={chatSocket}
-          openMobile={usersOpen}
-          onCloseMobile={() => setUsersOpen(false)}
+          openMobile={rightOpen}
+          onCloseMobile={() => setRightOpen(false)}
         />
       </div>
       
