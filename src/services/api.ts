@@ -96,4 +96,9 @@ export async function updateUserEstatus(id: string, estatus: string) {
   return res.data;
 }
 
+export async function deleteUser(id: string) {
+  const res = await api.delete(`/api/users/${id}`);
+  return res.data;
+}
+
 export default api;

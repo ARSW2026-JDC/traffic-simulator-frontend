@@ -31,6 +31,12 @@ describe('API Service', () => {
     expect(typeof getAllUsers).toBe('function');
   });
 
+  it('should export deleteUser function', async () => {
+    const { deleteUser } = await import('../services/api');
+    expect(deleteUser).toBeDefined();
+    expect(typeof deleteUser).toBe('function');
+  });
+
   it('should export getSimulations function', async () => {
     const { getSimulations } = await import('../services/api');
     expect(getSimulations).toBeDefined();

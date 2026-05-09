@@ -112,6 +112,7 @@
   padding: 0.5rem 0.75rem;
   cursor: pointer;
   transition: background 0.15s;
+  gap: 0.5rem;
 }
 
 .umm-user-row:hover {
@@ -148,6 +149,39 @@
   gap: 0.35rem;
   flex-shrink: 0;
   margin-left: 0.5rem;
+}
+
+.umm-user-actions {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.umm-delete-btn {
+  border: none;
+  background: transparent;
+  color: #ef4444;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.umm-delete-btn:hover:not(:disabled) {
+  color: #dc2626;
+}
+
+.umm-delete-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.umm-trash-icon {
+  display: block;
 }
 
 .umm-badge {

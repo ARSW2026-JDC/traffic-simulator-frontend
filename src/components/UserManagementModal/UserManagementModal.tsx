@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
-import { getAllUsers, updateUserRole, updateUserEstatus } from '../../services/api';
+import { getAllUsers, updateUserRole, updateUserEstatus, deleteUser } from '../../services/api';
+import { useAuthStore } from '../../stores/authStore';
 import './UserManagementModal.css';
 
 export type UserRole = 'USER' | 'ADMIN';
@@ -96,6 +97,7 @@ function DropdownButton({
 }
 
 export default function UserManagementModal({ onClose }: Props) {
+  const currentUserId = useAuthStore((state) => state.user?.id ?? null);
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -107,6 +109,7 @@ export default function UserManagementModal({ onClose }: Props) {
   const [saving, setSaving] = useState(false);
   const [modalError, setModalError] = useState('');
   const [isClosing, setIsClosing] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const modalRef = useRef<HTMLDivElement>(null);
 
   const loadUsers = async () => {
@@ -187,6 +190,34 @@ export default function UserManagementModal({ onClose }: Props) {
       setModalError('No se pudieron guardar los cambios.');
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleDelete = async (user: User) => {
+    if (deletingId || saving) return;
+    if (currentUserId && currentUserId === user.id) {
+      setError('No puedes eliminar tu propio usuario.');
+      return;
+    }
+    const label = user.name || user.email || 'este usuario';
+    const confirmed = window.confirm(
+      `¿Eliminar ${label}?\nEsto borrará su historial y mensajes asociados.`,
+    );
+    if (!confirmed) return;
+
+    setDeletingId(user.id);
+    setError('');
+
+    try {
+      await deleteUser(user.id);
+      setUsers((prev) => prev.filter((u) => u.id !== user.id));
+      if (selectedUser?.id === user.id) {
+        closeEditModal();
+      }
+    } catch {
+      setError('No se pudo eliminar el usuario.');
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -319,6 +350,50 @@ export default function UserManagementModal({ onClose }: Props) {
                   <span className={`umm-badge umm-badge--estatus umm-badge--${user.estatus.toLowerCase()}`}>
                     {getEstatusLabel(user.estatus)}
                   </span>
+                </div>
+                <div className="umm-user-actions">
+                  <button
+                    type="button"
+                    className="umm-delete-btn"
+                    title={
+                      currentUserId && currentUserId === user.id
+                        ? 'No puedes eliminar tu propio usuario'
+                        : 'Eliminar usuario'
+                    }
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(user);
+                    }}
+                    disabled={
+                      deletingId === user.id ||
+                      saving ||
+                      (currentUserId !== null && currentUserId === user.id)
+                    }
+                    aria-label="Eliminar usuario"
+                  >
+                    {deletingId === user.id ? (
+                      '...'
+                    ) : (
+                      <svg
+                        className="umm-trash-icon"
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                      >
+                        <polyline points="3 6 5 6 21 6" />
+                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                        <path d="M10 11v6" />
+                        <path d="M14 11v6" />
+                        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+                      </svg>
+                    )}
+                  </button>
                 </div>
               </div>
             ))}
