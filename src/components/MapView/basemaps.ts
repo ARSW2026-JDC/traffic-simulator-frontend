@@ -64,20 +64,6 @@ export const BASEMAPS: BasemapOption[] = [
       '&copy; <a href="https://www.arcgis.com/home/item.html?id=9d8e7bdbd1c34b748e0a863466d0c8b">Esri</a> &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
     maxZoom: 19,
   },
-  {
-    id: 'stadiaSmooth',
-    label: 'Stadia Smooth',
-    url: 'https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png',
-    attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>',
-    maxZoom: 20,
-  },
-  {
-    id: 'stadiaSmoothDark',
-    label: 'Stadia Smooth Dark',
-    url: 'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png',
-    attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>',
-    maxZoom: 20,
-  },
 ];
 
 export const DEFAULT_BASEMAP_ID = 'cartoLight';
