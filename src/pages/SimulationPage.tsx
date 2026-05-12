@@ -7,6 +7,7 @@ import RightPanel from '../components/Sidebar/RightPanel';
 import SimNavbar from '../components/Navbar/Navbar';
 import UserManagementModal from '../components/UserManagementModal/UserManagementModal';
 import { useState } from 'react';
+import { useSimulationStore } from '../stores/simulationStore';
 import '../pages/SimulationPage.css';
 
 export default function SimulationPage() {
@@ -16,6 +17,7 @@ export default function SimulationPage() {
   const simSocket = useSimulationSocket();
   const chatSocket = useChatSocket();
   const historySocket = useHistorySocket();
+  const { errorMessage } = useSimulationStore();
   void historySocket;
 
   return (
@@ -26,6 +28,11 @@ export default function SimulationPage() {
         onToggleUsers={() => setUsersOpen((prev) => !prev)}
         onToggleRight={() => setRightOpen((prev) => !prev)}
       />
+      {errorMessage && (
+        <div className="sim-error-banner">
+          {errorMessage}
+        </div>
+      )}
       <div className="sim-body">
         <LeftPanel simSocket={simSocket} openMobile={leftOpen} onCloseMobile={() => setLeftOpen(false)} />
         <div className="sim-map">

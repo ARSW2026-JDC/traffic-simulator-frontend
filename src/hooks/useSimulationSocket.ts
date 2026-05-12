@@ -9,7 +9,7 @@ const GATEWAY = import.meta.env.VITE_GATEWAY_URL || 'http://localhost:3000';
 export function useSimulationSocket() {
   const socketRef = useRef<Socket | null>(null);
   const { token, user } = useAuthStore();
-  const { setFullState, applyDelta, setConnected, setRoutes, setSimulationList, setActiveSimId } =
+  const { setFullState, applyDelta, setConnected, setRoutes, setSimulationList, setActiveSimId, setErrorMessage } =
     useSimulationStore();
 
   useEffect(() => {
@@ -52,6 +52,11 @@ export function useSimulationSocket() {
         setFullState({}, {}, 0);
         setRoutes([]);
       }
+    });
+
+    socket.on('error', (error: { message: string }) => {
+      setErrorMessage(error.message);
+      setTimeout(() => setErrorMessage(null), 5000);
     });
 
     return () => {

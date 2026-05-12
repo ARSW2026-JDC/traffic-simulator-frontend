@@ -181,8 +181,21 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
       setCautious(0.1);
       setTruck(0.1);
       setBus(0.2);
-    } catch {
-      setCreateError('No se pudo crear la simulacion.');
+    } catch (err: unknown) {
+      const axiosErr = err as any;
+      let message = 'No se pudo crear la simulación.';
+      if (axiosErr.response?.data?.message) {
+        message = Array.isArray(axiosErr.response.data.message)
+          ? axiosErr.response.data.message[0]
+          : axiosErr.response.data.message;
+      } else if (axiosErr.response?.data) {
+        message = typeof axiosErr.response.data === 'string'
+          ? axiosErr.response.data
+          : axiosErr.response.data.message || 'No se pudo crear la simulación.';
+      } else if (axiosErr.message) {
+        message = axiosErr.message;
+      }
+      setCreateError(message);
     } finally {
       setCreating(false);
     }
@@ -714,7 +727,7 @@ function EntityList({
 }
 
 function AddEntityForm({ simSocket }: { simSocket: RefObject<Socket | null> }) {
-  const { activeSimId } = useSimulationStore();
+  const { activeSimId, addMode, setAddMode, clickPosition } = useSimulationStore();
   const [type, setType] = useState<'vehicle' | 'trafficLight'>('vehicle');
   const [name, setName] = useState('');
   const [count, setCount] = useState(1);
@@ -728,6 +741,26 @@ function AddEntityForm({ simSocket }: { simSocket: RefObject<Socket | null> }) {
   const [green, setGreen] = useState(30);
   const [yellow, setYellow] = useState(4);
   const [red, setRed] = useState(30);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    const socket = simSocket.current;
+    if (!socket) return;
+    const onError = (err: { message: string }) => {
+      setError(err.message);
+      setTimeout(() => setError(''), 5000);
+    };
+    socket.on('error', onError);
+    return () => { socket.off('error', onError); };
+  }, [simSocket]);
+
+  const toggleMapMode = () => {
+    if (addMode === 'trafficLight') {
+      setAddMode(null);
+    } else {
+      setAddMode('trafficLight');
+    }
+  };
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -747,14 +780,15 @@ function AddEntityForm({ simSocket }: { simSocket: RefObject<Socket | null> }) {
         },
       });
     } else {
-      simSocket.current.emit('entity:add', {
-        type: 'trafficLight',
-        name: name || undefined,
-        lat,
-        lon,
-        greenDuration: green * 1000,
-        yellowDuration: yellow * 1000,
-        redDuration: red * 1000,
+      simSocket.current.emit('command', {
+        type: 'add_traffic_light',
+        data: {
+          lat,
+          lon,
+          greenMs: green * 1000,
+          yellowMs: yellow * 1000,
+          redMs: red * 1000,
+        },
       });
     }
 
@@ -877,8 +911,24 @@ function AddEntityForm({ simSocket }: { simSocket: RefObject<Socket | null> }) {
             <label className="text-xs text-[var(--s-sub)] block mb-1">Red duration — {red}s</label>
             <input type="range" min={2} max={120} value={red} onChange={(e) => setRed(Number(e.target.value))} className="w-full accent-red-500" />
           </div>
+          <button
+            type="button"
+            onClick={toggleMapMode}
+            className={`w-full py-2 text-sm font-medium rounded-lg transition-colors ${
+              addMode === 'trafficLight'
+                ? 'bg-red-500 hover:bg-red-600 text-white'
+                : 'bg-white text-[var(--s-text)] border border-[var(--s-border)] hover:bg-gray-50'
+            }`}
+          >
+            {addMode === 'trafficLight' ? 'Cancel map mode' : 'Click on map to add'}
+          </button>
+          {addMode === 'trafficLight' && (
+            <p className="text-xs text-[var(--s-sub)] text-center">Click on an intersection in the map</p>
+          )}
         </>
       )}
+
+      {error && <p className="text-xs text-red-500">{error}</p>}
 
       <button
         type="submit"
