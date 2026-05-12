@@ -63,8 +63,6 @@ export default function ControlPanel({ simSocket }: Props) {
     setFullState({}, {}, 0);
     setRoutes([]);
     deselect();
-    simSocket.current?.emit('sync:request', { simId });
-    simSocket.current?.emit('routes:request');
   };
 
   const handleBasemapChange = (value: string) => {

@@ -15,28 +15,58 @@ export function useHistorySocket() {
   const { addEntry, setEntries, setLoading } = useHistoryStore();
 
   useEffect(() => {
-    if (!token || !user || !activeSimId) return;
+    let cancelled = false;
 
+    if (!token || !user || !activeSimId) {
+      setEntries([]);
+      setLoading(false);
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+        socketRef.current = null;
+      }
+      return;
+    }
+
+    const requestedSimId = activeSimId;
+    setEntries([]);
     setLoading(true);
-    getHistory(50, undefined, activeSimId)
-      .then((data) => {
-        setEntries(data);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
+
+    const fetchHistory = () =>
+      getHistory(50, undefined, requestedSimId)
+        .then((data) => {
+          if (cancelled) return;
+          if (useSimulationStore.getState().activeSimId !== requestedSimId) return;
+          setEntries(data);
+        })
+        .catch(() => {})
+        .finally(() => {
+          if (cancelled) return;
+          if (useSimulationStore.getState().activeSimId !== requestedSimId) return;
+          setLoading(false);
+        });
+
+    void fetchHistory();
 
     const socket = io(`${GATEWAY}/history`, {
       path: '/history/socket.io',
-      auth: { token, simId: activeSimId },
+      auth: { token, simId: requestedSimId },
       transports: ['websocket', 'polling'],
     });
 
     socketRef.current = socket;
 
+    socket.on('connect', () => {
+      void fetchHistory();
+    });
+
     socket.on('history:new', (entry: ChangeLogEntry) => addEntry(entry));
 
     return () => {
+      cancelled = true;
       socket.disconnect();
+      if (socketRef.current === socket) {
+        socketRef.current = null;
+      }
     };
   }, [token, user, activeSimId]);
 

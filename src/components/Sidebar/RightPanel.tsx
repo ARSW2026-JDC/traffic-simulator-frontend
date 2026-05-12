@@ -37,7 +37,7 @@ export default function RightPanel({ chatSocket, openMobile, onCloseMobile }: Pr
           onClick={() => setTab('history')}
           className={`sim-right-tab ${tab === 'history' ? 'sim-right-tab--active' : 'sim-right-tab--idle'}`}
         >
-          History
+          Historial
         </button>
       </div>
 

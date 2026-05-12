@@ -1,4 +1,5 @@
 import { useHistoryStore } from '../../stores/historyStore';
+import { useSimulationStore } from '../../stores/simulationStore';
 
 const ENTITY_COLORS: Record<string, string> = {
   vehicle: 'text-blue-400',
@@ -24,6 +25,7 @@ const formatFieldValue = (field: string, value: string) => {
 
 export default function HistoryPanel() {
   const { entries, isLoading } = useHistoryStore();
+  const activeSimId = useSimulationStore((s) => s.activeSimId);
 
   if (isLoading) {
     return (
@@ -34,10 +36,13 @@ export default function HistoryPanel() {
   }
 
   if (entries.length === 0) {
+    const message = !activeSimId
+      ? 'Selecciona una simulación para ver historial'
+      : 'No changes recorded yet.';
     return (
       <div className="h-full flex flex-col items-center justify-center p-6 text-center">
         <div className="text-4xl mb-3">📋</div>
-        <p className="text-muted text-sm">No changes recorded yet.</p>
+        <p className="text-muted text-sm">{message}</p>
       </div>
     );
   }
