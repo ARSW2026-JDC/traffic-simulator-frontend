@@ -77,19 +77,18 @@ describe('AddEntityForm - Traffic Light Clicker Auto-Activation Logic', () => {
   });
 
   describe('Clear button logic', () => {
-    it('should clear clickPosition when clear button is clicked', () => {
+    beforeEach(() => {
       useSimulationStore.getState().setAddMode('trafficLight');
       useSimulationStore.getState().setClickPosition({ lat: 4.7110, lng: -74.0721 });
+    });
 
+    it('should clear clickPosition when clear button is clicked', () => {
       useSimulationStore.getState().setClickPosition(null);
 
       expect(useSimulationStore.getState().clickPosition).toBeNull();
     });
 
     it('should clear clickPosition but keep addMode when clear is pressed', () => {
-      useSimulationStore.getState().setAddMode('trafficLight');
-      useSimulationStore.getState().setClickPosition({ lat: 4.7110, lng: -74.0721 });
-
       useSimulationStore.getState().setClickPosition(null);
 
       expect(useSimulationStore.getState().addMode).toBe('trafficLight');
@@ -142,25 +141,21 @@ describe('AddEntityForm - Traffic Light Clicker Auto-Activation Logic', () => {
   });
 
   describe('clickPosition sync to lat/lon form fields', () => {
+    beforeEach(() => {
+      useSimulationStore.getState().setClickPosition({ lat: 4.7110, lng: -74.0721 });
+    });
+
     it('should sync clickPosition.lat to lat form field', () => {
-      const clickPosition = { lat: 4.7110, lng: -74.0721 };
-      useSimulationStore.getState().setClickPosition(clickPosition);
-      
-      const lat = clickPosition.lat;
-      expect(lat).toBe(4.7110);
+      const clickPosition = useSimulationStore.getState().clickPosition!;
+      expect(clickPosition.lat).toBe(4.7110);
     });
 
     it('should sync clickPosition.lng to lon form field', () => {
-      const clickPosition = { lat: 4.7110, lng: -74.0721 };
-      useSimulationStore.getState().setClickPosition(clickPosition);
-      
-      const lng = clickPosition.lng;
-      expect(lng).toBe(-74.0721);
+      const clickPosition = useSimulationStore.getState().clickPosition!;
+      expect(clickPosition.lng).toBe(-74.0721);
     });
 
     it('should allow manual editing of lat/lon after click', () => {
-      useSimulationStore.getState().setClickPosition({ lat: 4.7110, lng: -74.0721 });
-      
       const manualLat = 4.7500;
       const manualLon = -74.0800;
       

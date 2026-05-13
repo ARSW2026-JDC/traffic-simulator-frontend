@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { useChatStore } from '../stores/chatStore';
 import { useHistoryStore } from '../stores/historyStore';
 import { useSimulationStore } from '../stores/simulationStore';
+import type { ChatMessage } from '../types';
 
 
 vi.mock('socket.io-client', () => ({
@@ -22,13 +23,23 @@ vi.mock('../services/firebase', () => ({
 }));
 
 describe('useChatSocket', () => {
+  const pendingMsg: ChatMessage = {
+    id: 'msg-1',
+    userId: 'user-1',
+    userName: 'User',
+    content: 'Hello',
+    timestamp: 1234567890,
+    status: 'pending' as const,
+    clientId: 'client-1',
+  };
+
   beforeEach(() => {
     useChatStore.getState().setMessages([]);
     useChatStore.getState().setConnected(false);
   });
 
   it('should handle message reception', () => {
-    const msg = {
+    const msg: ChatMessage = {
       id: 'msg-1',
       userId: 'user-1',
       userName: 'User',
@@ -46,7 +57,7 @@ describe('useChatSocket', () => {
   });
 
   it('should handle optimistic messages', () => {
-    const msg = {
+    const msg: ChatMessage = {
       id: 'msg-1',
       userId: 'user-1',
       userName: 'User',
@@ -60,18 +71,9 @@ describe('useChatSocket', () => {
   });
 
   it('should handle message confirmation', () => {
-    const optimisticMsg = {
-      id: 'msg-1',
-      userId: 'user-1',
-      userName: 'User',
-      content: 'Hello',
-      timestamp: 1234567890,
-      status: 'pending' as const,
-      clientId: 'client-1',
-    };
-    useChatStore.getState().addOptimisticMessage(optimisticMsg);
+    useChatStore.getState().addOptimisticMessage(pendingMsg);
     
-    const serverMsg = {
+    const serverMsg: ChatMessage = {
       id: 'server-msg-1',
       userId: 'user-1',
       userName: 'User',
@@ -85,16 +87,7 @@ describe('useChatSocket', () => {
   });
 
   it('should handle message failure', () => {
-    const msg = {
-      id: 'msg-1',
-      userId: 'user-1',
-      userName: 'User',
-      content: 'Hello',
-      timestamp: 1234567890,
-      status: 'pending' as const,
-      clientId: 'client-1',
-    };
-    useChatStore.getState().addOptimisticMessage(msg);
+    useChatStore.getState().addOptimisticMessage(pendingMsg);
     useChatStore.getState().failMessage('client-1');
     
     expect(useChatStore.getState().messages[0].status).toBe('failed');

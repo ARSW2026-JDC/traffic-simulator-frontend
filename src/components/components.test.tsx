@@ -41,11 +41,6 @@ describe('MapView Clicker Logic', () => {
     useSimulationStore.getState().setClickPosition(null);
   });
 
-  afterEach(() => {
-    useSimulationStore.getState().setAddMode(null);
-    useSimulationStore.getState().setClickPosition(null);
-  });
-
   it('should not render when addMode is null', () => {
     const { addMode, clickPosition } = useSimulationStore.getState();
     const shouldRender = addMode === 'trafficLight' && clickPosition !== null;

@@ -9,12 +9,15 @@ vi.mock('firebase/auth/cordova', () => ({
 }));
 
 
+import type { UserProfile, ChatMessage } from '../types';
 import { useAuthStore } from './authStore';
 import { useChatStore } from './chatStore';
 import { useHistoryStore } from './historyStore';
 import { useSimulationStore } from './simulationStore';
 
 describe('AuthStore', () => {
+  const userProfile: UserProfile = { id: 'test-uid', role: 'ADMIN' as const, email: 'test@example.com', name: null, createdAt: '2024-01-01T00:00:00.000Z' };
+
   beforeEach(() => {
     useAuthStore.getState().logout();
   });
@@ -36,7 +39,6 @@ describe('AuthStore', () => {
   });
 
   it('should set user profile', () => {
-    const userProfile = { id: 'test-uid', role: 'ADMIN' as const, email: 'test@example.com', name: null, createdAt: new Date().toISOString() };
     useAuthStore.getState().setUser(userProfile);
     
     expect(useAuthStore.getState().user).toEqual(userProfile);
@@ -51,7 +53,6 @@ describe('AuthStore', () => {
   });
 
   it('should logout and clear session', () => {
-    const userProfile = { id: 'test-uid', role: 'ADMIN' as const, email: 'test@example.com', name: null, createdAt: new Date().toISOString() };
     useAuthStore.getState().setUser(userProfile);
     useAuthStore.getState().setFirebaseUser({ uid: 'test' } as any, 'token');
     
@@ -65,6 +66,8 @@ describe('AuthStore', () => {
 });
 
 describe('ChatStore', () => {
+  const sentMsg: ChatMessage = { id: '1', userId: 'user1', userName: 'User', content: 'Hello', timestamp: 123, status: 'sent' as const };
+
   beforeEach(() => {
     useChatStore.getState().setMessages([]);
     useChatStore.getState().setConnected(false);
@@ -77,16 +80,14 @@ describe('ChatStore', () => {
   });
 
   it('should add message', () => {
-    const msg = { id: '1', userId: 'user1', userName: 'User', content: 'Hello', timestamp: 123, status: 'sent' as const };
-    useChatStore.getState().addMessage(msg);
+    useChatStore.getState().addMessage(sentMsg);
     
-    expect(useChatStore.getState().messages).toContainEqual(msg);
+    expect(useChatStore.getState().messages).toContainEqual(sentMsg);
   });
 
   it('should not add duplicate messages', () => {
-    const msg = { id: '1', userId: 'user1', userName: 'User', content: 'Hello', timestamp: 123, status: 'sent' as const };
-    useChatStore.getState().addMessage(msg);
-    useChatStore.getState().addMessage(msg);
+    useChatStore.getState().addMessage(sentMsg);
+    useChatStore.getState().addMessage(sentMsg);
     
     expect(useChatStore.getState().messages.length).toBe(1);
   });
@@ -109,18 +110,18 @@ describe('ChatStore', () => {
     expect(useChatStore.getState().isConnected).toBe(false);
   });
 
+  const pendingMsg: ChatMessage = { id: '1', userId: 'user1', userName: 'User', content: 'Hello', timestamp: 123, status: 'pending' as const, clientId: 'client-1' };
+
   it('should add optimistic message', () => {
-    const msg = { id: '1', userId: 'user1', userName: 'User', content: 'Hello', timestamp: 123, status: 'pending' as const, clientId: 'client-1' };
-    useChatStore.getState().addOptimisticMessage(msg);
+    useChatStore.getState().addOptimisticMessage(pendingMsg);
     
-    expect(useChatStore.getState().messages).toContainEqual(msg);
+    expect(useChatStore.getState().messages).toContainEqual(pendingMsg);
   });
 
   it('should confirm message', () => {
-    const optimisticMsg = { id: '1', userId: 'user1', userName: 'User', content: 'Hello', timestamp: 123, status: 'pending' as const, clientId: 'client-1' };
-    useChatStore.getState().addOptimisticMessage(optimisticMsg);
+    useChatStore.getState().addOptimisticMessage(pendingMsg);
     
-    const serverMsg = { id: 'server-1', userId: 'user1', userName: 'User', content: 'Hello', timestamp: 124, status: 'sent' as const };
+    const serverMsg: ChatMessage = { id: 'server-1', userId: 'user1', userName: 'User', content: 'Hello', timestamp: 124, status: 'sent' as const };
     useChatStore.getState().confirmMessage('client-1', serverMsg);
     
     const msgs = useChatStore.getState().messages;
@@ -128,8 +129,7 @@ describe('ChatStore', () => {
   });
 
   it('should fail message', () => {
-    const msg = { id: '1', userId: 'user1', userName: 'User', content: 'Hello', timestamp: 123, status: 'pending' as const, clientId: 'client-1' };
-    useChatStore.getState().addOptimisticMessage(msg);
+    useChatStore.getState().addOptimisticMessage(pendingMsg);
     
     useChatStore.getState().failMessage('client-1');
     
