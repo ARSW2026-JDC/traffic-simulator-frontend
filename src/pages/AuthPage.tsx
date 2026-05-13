@@ -240,7 +240,7 @@ export default function AuthPage() {
             {loading ? (
               <><Spinner /> {mode === 'login' ? 'Iniciando...' : 'Creando cuenta...'}</>
             ) : (
-              mode === 'login' ? 'Iniciar sesión' : 'Crear Cuenta'
+              mode === 'login' ? 'Iniciar sesión' : 'Crear cuenta'
             )}
           </button>
         </form>

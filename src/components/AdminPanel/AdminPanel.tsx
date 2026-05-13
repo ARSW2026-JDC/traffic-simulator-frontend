@@ -17,6 +17,13 @@ interface Props {
 
 type SubTab = 'vehicles' | 'lights' | 'add' | 'simulation';
 
+const subTabLabels: Record<SubTab, string> = {
+  vehicles: 'Vehículos',
+  lights: 'Semáforos',
+  add: 'Agregar',
+  simulation: 'Simulación',
+};
+
 export default function AdminPanel({ simSocket }: Props) {
   const [sub, setSub] = useState<SubTab>('vehicles');
 
@@ -33,7 +40,7 @@ export default function AdminPanel({ simSocket }: Props) {
                 : 'text-[var(--s-sub)] hover:text-[#2258B1]'
             }`}
           >
-            {t}
+            {subTabLabels[t]}
           </button>
         ))}
       </div>
@@ -105,7 +112,7 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
       setSingle(data ?? null);
     } catch {
       setSingle(null);
-      setError('No se pudo cargar la simulacion solicitada.');
+      setError('No se pudo cargar la simulación solicitada.');
     } finally {
       setLoading(false);
     }
@@ -135,7 +142,7 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
         setSingle(null);
       }
     } catch {
-      setError('No se pudo eliminar la simulacion.');
+      setError('No se pudo eliminar la simulación.');
     } finally {
       setDeletingId('');
     }
@@ -147,7 +154,7 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
   const createNewSimulation = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!mapId.trim()) {
-      setCreateError('Selecciona un mapa valido.');
+      setCreateError('Selecciona un mapa válido.');
       return;
     }
     if (useDriverMix && !driverMixValid) {
@@ -203,7 +210,7 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
 
   const fillFromBbox = () => {
     if (!bbox) {
-      setImportError('Selecciona un area en el mapa.');
+      setImportError('Selecciona un área en el mapa.');
       return;
     }
     setImportError('');
@@ -299,7 +306,7 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
             onClick={loadAll}
             className="text-xs text-[#2258B1] hover:text-[#1a46a0] transition-colors"
           >
-            Refresh
+            Actualizar
           </button>
         </div>
 
@@ -315,7 +322,7 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
                 <div className="flex items-center justify-between">
                   <p className="text-sm text-[var(--s-text)]">{sim.mapId}</p>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-[var(--s-sub)]">{sim.nVehicles} vehiculos</span>
+                    <span className="text-xs text-[var(--s-sub)]">{sim.nVehicles} vehículos</span>
                     <button
                       onClick={() => removeSimulation(sim.simId)}
                       disabled={deletingId === sim.simId}
@@ -361,7 +368,7 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
             <div className="flex items-center justify-between">
               <p className="text-sm text-[var(--s-text)]">{single.mapId}</p>
               <div className="flex items-center gap-2">
-                <span className="text-[var(--s-sub)]">{single.nVehicles} vehiculos</span>
+                <span className="text-[var(--s-sub)]">{single.nVehicles} vehículos</span>
                 <button
                   onClick={() => removeSimulation(single.simId)}
                   disabled={deletingId === single.simId}
@@ -390,7 +397,7 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
             onClick={loadMaps}
             className="text-xs text-[#2258B1] hover:text-[#1a46a0] transition-colors"
           >
-            Refresh
+            Actualizar
           </button>
         </div>
 
@@ -546,7 +553,7 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
       </section>
 
       <section className="space-y-2">
-        <h3 className="text-sm text-[var(--s-text)] font-medium">Crear simulacion</h3>
+        <h3 className="text-sm text-[var(--s-text)] font-medium">Crear simulación</h3>
         <form onSubmit={createNewSimulation} className="space-y-3">
           <div>
             <label className="text-xs text-[var(--s-sub)] block mb-1">Mapa</label>
@@ -565,7 +572,7 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
           </div>
 
           <div>
-            <label className="text-xs text-[var(--s-sub)] block mb-1">Vehiculos</label>
+            <label className="text-xs text-[var(--s-sub)] block mb-1">Vehículos</label>
             <input
               type="number"
               min={1}
@@ -588,7 +595,7 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
           {useDriverMix && (
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="text-xs text-[var(--s-sub)] block mb-1">Aggressive</label>
+                <label className="text-xs text-[var(--s-sub)] block mb-1">Agresivo</label>
                 <input
                   type="number"
                   min={0}
@@ -612,7 +619,7 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
                 />
               </div>
               <div>
-                <label className="text-xs text-[var(--s-sub)] block mb-1">Cautious</label>
+                <label className="text-xs text-[var(--s-sub)] block mb-1">Cauteloso</label>
                 <input
                   type="number"
                   min={0}
@@ -624,7 +631,7 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
                 />
               </div>
               <div>
-                <label className="text-xs text-[var(--s-sub)] block mb-1">Truck</label>
+                <label className="text-xs text-[var(--s-sub)] block mb-1">Camión</label>
                 <input
                   type="number"
                   min={0}
@@ -636,7 +643,7 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
                 />
               </div>
               <div>
-                <label className="text-xs text-[var(--s-sub)] block mb-1">Bus</label>
+                <label className="text-xs text-[var(--s-sub)] block mb-1">Autobús</label>
                 <input
                   type="number"
                   min={0}
@@ -660,7 +667,7 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
             disabled={creating || (useDriverMix && !driverMixValid)}
             className="w-full py-2 bg-[#2258B1] hover:bg-[#1a46a0] text-white font-medium text-xs rounded-lg transition-colors disabled:opacity-50"
           >
-            {creating ? 'Creando...' : 'Crear simulacion'}
+            {creating ? 'Creando...' : 'Crear simulación'}
           </button>
         </form>
       </section>
@@ -702,7 +709,7 @@ function EntityList({
 
   if (items.length === 0) {
     return (
-      <div className="p-4 text-center text-[var(--s-sub)] text-sm">No {type}s in simulation.</div>
+      <div className="p-4 text-center text-[var(--s-sub)] text-sm">No hay {type === 'vehicle' ? 'vehículos' : 'semáforos'} en la simulación.</div>
     );
   }
 
@@ -718,7 +725,7 @@ function EntityList({
             onClick={() => remove(item.id)}
             className="text-xs text-red-400 hover:text-red-300 transition-colors"
           >
-            Remove
+            Eliminar
           </button>
         </div>
       ))}
@@ -823,39 +830,39 @@ function AddEntityForm({ simSocket }: { simSocket: RefObject<Socket | null> }) {
                type === t ? 'bg-[#2258B1] text-white font-medium' : 'bg-white text-[var(--s-sub)] border border-[var(--s-border)]'
             }`}
           >
-            {t === 'vehicle' ? 'Vehicle' : 'Traffic Light'}
+            {t === 'vehicle' ? 'Vehículo' : 'Semáforo'}
           </button>
         ))}
       </div>
 
       <div>
-        <label className="text-xs text-[var(--s-sub)] block mb-1">Name (optional)</label>
+        <label className="text-xs text-[var(--s-sub)] block mb-1">Nombre (opcional)</label>
         <input
           value={name}
           onChange={(e) => setName(e.target.value)}
           className="w-full px-3 py-2 bg-white border border-[var(--s-border)] rounded-lg text-sm text-[var(--s-text)] focus:outline-none focus:border-[#2258B1]"
-          placeholder="Auto-generated if empty"
+          placeholder="Se genera automáticamente si está vacío"
         />
       </div>
 
       {type === 'vehicle' && (
         <>
           <div>
-            <label className="text-xs text-[var(--s-sub)] block mb-1">Profile</label>
+            <label className="text-xs text-[var(--s-sub)] block mb-1">Perfil</label>
             <select
               value={profile}
               onChange={(e) => setProfile(e.target.value as typeof profile)}
               className="w-full px-3 py-2 bg-white border border-[var(--s-border)] rounded-lg text-sm text-[var(--s-text)] focus:outline-none focus:border-[#2258B1]"
             >
-              <option value="aggressive">Aggressive</option>
+              <option value="aggressive">Agresivo</option>
               <option value="normal">Normal</option>
-              <option value="cautious">Cautious</option>
-              <option value="truck">Truck</option>
-              <option value="bus">Bus</option>
+              <option value="cautious">Cauteloso</option>
+              <option value="truck">Camión</option>
+              <option value="bus">Autobús</option>
             </select>
           </div>
           <div>
-            <label className="text-xs text-[var(--s-sub)] block mb-1">Count</label>
+            <label className="text-xs text-[var(--s-sub)] block mb-1">Cantidad</label>
             <input
               type="number"
               min={1}
@@ -866,7 +873,7 @@ function AddEntityForm({ simSocket }: { simSocket: RefObject<Socket | null> }) {
             />
           </div>
           <div>
-            <label className="text-xs text-[var(--s-sub)] block mb-1">Speed — {speed.toFixed(2)} km/h</label>
+            <label className="text-xs text-[var(--s-sub)] block mb-1">Velocidad — {speed.toFixed(2)} km/h</label>
             <input
               type="range"
               min={5}
@@ -895,7 +902,7 @@ function AddEntityForm({ simSocket }: { simSocket: RefObject<Socket | null> }) {
         <>
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="text-xs text-[var(--s-sub)] block mb-1">Latitude</label>
+              <label className="text-xs text-[var(--s-sub)] block mb-1">Latitud</label>
               <input
                 type="number"
                 step="0.0001"
@@ -905,7 +912,7 @@ function AddEntityForm({ simSocket }: { simSocket: RefObject<Socket | null> }) {
               />
             </div>
             <div>
-              <label className="text-xs text-[var(--s-sub)] block mb-1">Longitude</label>
+              <label className="text-xs text-[var(--s-sub)] block mb-1">Longitud</label>
               <input
                 type="number"
                 step="0.0001"
@@ -916,15 +923,15 @@ function AddEntityForm({ simSocket }: { simSocket: RefObject<Socket | null> }) {
             </div>
           </div>
           <div>
-            <label className="text-xs text-[var(--s-sub)] block mb-1">Green duration — {green}s</label>
+            <label className="text-xs text-[var(--s-sub)] block mb-1">Duración verde — {green}s</label>
             <input type="range" min={2} max={120} value={green} onChange={(e) => setGreen(Number(e.target.value))} className="w-full accent-green-500" />
           </div>
           <div>
-            <label className="text-xs text-[var(--s-sub)] block mb-1">Yellow duration — {yellow}s</label>
+            <label className="text-xs text-[var(--s-sub)] block mb-1">Duración amarillo — {yellow}s</label>
             <input type="range" min={1} max={30} value={yellow} onChange={(e) => setYellow(Number(e.target.value))} className="w-full accent-yellow-400" />
           </div>
           <div>
-            <label className="text-xs text-[var(--s-sub)] block mb-1">Red duration — {red}s</label>
+            <label className="text-xs text-[var(--s-sub)] block mb-1">Duración rojo — {red}s</label>
             <input type="range" min={2} max={120} value={red} onChange={(e) => setRed(Number(e.target.value))} className="w-full accent-red-500" />
           </div>
           <div className="bg-[#f0f7ff] border border-[#2258B1] rounded-lg p-3">
@@ -957,7 +964,7 @@ function AddEntityForm({ simSocket }: { simSocket: RefObject<Socket | null> }) {
         type="submit"
         className="w-full py-2 bg-[#2258B1] hover:bg-[#1a46a0] text-white font-medium text-sm rounded-lg transition-colors"
       >
-        Add {type === 'vehicle' ? 'Vehicle' : 'Traffic Light'}
+        Agregar {type === 'vehicle' ? 'Vehículo' : 'Semáforo'}
       </button>
     </form>
   );

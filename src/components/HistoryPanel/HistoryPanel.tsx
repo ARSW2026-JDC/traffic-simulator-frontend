@@ -122,7 +122,7 @@ export default function HistoryPanel({ historySocket }: Props) {
   }
 
 if (entries.length === 0) {
-    const message = !activeSimId ? 'Selecciona una simulacion' : 'Sin cambios registrados';
+    const message = !activeSimId ? 'Selecciona una simulación' : 'Sin cambios registrados';
     return (
       <div className="h-full flex flex-col items-center justify-center p-6 text-center">
         <p className="text-sm text-[var(--s-sub)]">{message}</p>
