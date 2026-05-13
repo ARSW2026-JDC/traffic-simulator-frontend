@@ -66,22 +66,41 @@ describe('API Response Handling', () => {
 });
 
 describe('API Endpoints Coverage', () => {
-  const endpoints = [
-    'verifyToken',
-    'getMe',
-    'updateMe',
-    'updateUserRole',
-    'getAllUsers',
-    'getChatMessages',
-    'getHistory',
-    'getSimulations',
-    'getSimulationById',
-    'deleteSimulationById',
-    'createSimulation',
-    'getAvailableMaps',
-    'updateUserEstatus',
-    'deleteUser',
+  const endpoints: Array<{ name: string; url: string; method: string }> = [
+    { name: 'verifyToken',        url: '/api/auth/verify',               method: 'post' },
+    { name: 'getMe',              url: '/api/users/me',                  method: 'get' },
+    { name: 'updateMe',           url: '/api/users/me',                  method: 'patch' },
+    { name: 'updateUserRole',     url: '/api/users/',                    method: 'patch' },
+    { name: 'getAllUsers',        url: '/api/users',                     method: 'get' },
+    { name: 'getChatMessages',    url: '/chat/chat/chat/messages',       method: 'get' },
+    { name: 'getHistory',         url: '/history/history/history',       method: 'get' },
+    { name: 'getSimulations',     url: '/sim/sim',                       method: 'get' },
+    { name: 'getSimulationById',  url: '/sim/sim/',                      method: 'get' },
+    { name: 'deleteSimulationById', url: '/sim/sim/',                    method: 'delete' },
+    { name: 'createSimulation',   url: '/sim/sim',                       method: 'post' },
+    { name: 'getAvailableMaps',   url: '/sim/sim/maps/available',        method: 'get' },
+    { name: 'updateUserEstatus',  url: '/api/users/',                    method: 'patch' },
+    { name: 'deleteUser',         url: '/api/users/',                    method: 'delete' },
   ];
 
+  it('should export all expected endpoint functions', () => {
+    for (const { name } of endpoints) {
+      expect(api).toHaveProperty(name);
+      expect(typeof (api as any)[name]).toBe('function');
+    }
+  });
 
+  it('each endpoint function source should reference the correct URL', () => {
+    for (const { name, url } of endpoints) {
+      const fnStr = (api as any)[name].toString();
+      expect(fnStr).toContain(url);
+    }
+  });
+
+  it('each endpoint function source should use the correct HTTP method', () => {
+    for (const { name, method } of endpoints) {
+      const fnStr = (api as any)[name].toString();
+      expect(fnStr).toContain(`api.${method}(`);
+    }
+  });
 });

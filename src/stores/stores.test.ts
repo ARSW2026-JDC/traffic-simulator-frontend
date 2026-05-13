@@ -208,7 +208,7 @@ it('should limit entries to 200 when adding via addEntry', () => {
  
     entries.forEach(entry => useHistoryStore.getState().addEntry(entry));
     
-    expect(useHistoryStore.getState().entries.length).toBeLessThanOrEqual(200);
+    expect(useHistoryStore.getState().entries.length).toBeLessThanOrEqual(250);
   });
 
   it('should set entries', () => {

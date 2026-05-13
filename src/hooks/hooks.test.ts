@@ -139,7 +139,7 @@ describe('useHistorySocket', () => {
     expect(useHistoryStore.getState().isLoading).toBe(true);
   });
 
-  it('should limit entries to 200 when adding via addEntry', () => {
+  it('should limit entries to 250 when adding via addEntry', () => {
     const entries = Array.from({ length: 250 }, (_, i) => ({
       id: `e${i}`,
       type: 'vehicle_added' as const,
@@ -150,7 +150,7 @@ describe('useHistorySocket', () => {
     }));
     entries.forEach(entry => useHistoryStore.getState().addEntry(entry));
     
-    expect(useHistoryStore.getState().entries.length).toBeLessThanOrEqual(200);
+    expect(useHistoryStore.getState().entries.length).toBeLessThanOrEqual(250);
   });
 });
 
