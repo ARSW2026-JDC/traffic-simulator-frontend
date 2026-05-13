@@ -71,10 +71,16 @@ export interface ChatMessage {
 
 export interface ChangeLogEntry {
   id: string;
+  eventId?: string;
   userId: string;
   userName: string;
   entityType: string;
   entityId: string;
+  action?: 'add' | 'modify' | 'delete';
+  commandType?: string | null;
+  payload?: Record<string, unknown> | null;
+  before?: Record<string, unknown> | null;
+  after?: Record<string, unknown> | null;
   field: string;
   oldValue: string;
   newValue: string;

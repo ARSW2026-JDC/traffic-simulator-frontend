@@ -40,6 +40,7 @@ export default function SimulationPage() {
         </div>
         <RightPanel
           chatSocket={chatSocket}
+          historySocket={historySocket}
           openMobile={rightOpen}
           onCloseMobile={() => setRightOpen(false)}
         />

@@ -10,16 +10,25 @@ const GATEWAY = import.meta.env.VITE_GATEWAY_URL || 'http://localhost:3000';
 
 export function useHistorySocket() {
   const socketRef = useRef<Socket | null>(null);
+  const loadMoreRef = useRef<(() => void) | null>(null);
   const { token, user } = useAuthStore();
   const activeSimId = useSimulationStore((s) => s.activeSimId);
-  const { addEntry, setEntries, setLoading } = useHistoryStore();
+  const {
+    addEntry,
+    appendEntries,
+    setEntries,
+    setLoading,
+    setLoadingMore,
+    setHasMore,
+    setCursor,
+    reset,
+  } = useHistoryStore();
 
   useEffect(() => {
     let cancelled = false;
 
     if (!token || !user || !activeSimId) {
-      setEntries([]);
-      setLoading(false);
+      reset();
       if (socketRef.current) {
         socketRef.current.disconnect();
         socketRef.current = null;
@@ -28,24 +37,44 @@ export function useHistorySocket() {
     }
 
     const requestedSimId = activeSimId;
-    setEntries([]);
+    reset();
     setLoading(true);
 
-    const fetchHistory = () =>
-      getHistory(50, undefined, requestedSimId)
+    const fetchHistory = (nextCursor?: string) => {
+      if (nextCursor) setLoadingMore(true);
+      getHistory(50, nextCursor, requestedSimId)
         .then((data) => {
           if (cancelled) return;
           if (useSimulationStore.getState().activeSimId !== requestedSimId) return;
-          setEntries(data);
+          if (!Array.isArray(data)) return;
+
+          if (nextCursor) {
+            appendEntries(data);
+          } else {
+            setEntries(data);
+          }
+
+          const last = data[data.length - 1];
+          setCursor(last?.id ?? null);
+          setHasMore(data.length === 50);
         })
         .catch(() => {})
         .finally(() => {
           if (cancelled) return;
           if (useSimulationStore.getState().activeSimId !== requestedSimId) return;
-          setLoading(false);
+          if (!nextCursor) setLoading(false);
+          if (nextCursor) setLoadingMore(false);
         });
+    };
 
     void fetchHistory();
+
+    loadMoreRef.current = () => {
+      if (cancelled) return;
+      const { cursor, hasMore, isLoadingMore } = useHistoryStore.getState();
+      if (!hasMore || isLoadingMore || !cursor) return;
+      fetchHistory(cursor);
+    };
 
     const socket = io(`${GATEWAY}/history`, {
       path: '/history/socket.io',
@@ -70,5 +99,5 @@ export function useHistorySocket() {
     };
   }, [token, user, activeSimId]);
 
-  return socketRef;
+  return { socketRef, loadMoreRef };
 }

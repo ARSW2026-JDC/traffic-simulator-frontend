@@ -2,8 +2,6 @@ import { useEffect, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { useSimulationStore } from '../stores/simulationStore';
 import { useAuthStore } from '../stores/authStore';
-import { useHistoryStore } from '../stores/historyStore';
-import { getHistory } from '../services/api';
 import type { SimulationFullState, SimulationDelta, SimulationSummary } from '../types';
 
 const GATEWAY = import.meta.env.VITE_GATEWAY_URL || 'http://localhost:3000';
@@ -59,13 +57,7 @@ export function useSimulationSocket() {
       const currentToken = useAuthStore.getState().token;
       if (!currentToken) return;
 
-      getHistory(50, undefined, activeSimId)
-        .then((data) => {
-          if (useSimulationStore.getState().activeSimId === activeSimId) {
-            useHistoryStore.getState().setEntries(data as any);
-          }
-        })
-        .catch(() => {});
+      // History handled by useHistorySocket
     });
 
     socket.on('simulation:delta', (delta: SimulationDelta) => {
@@ -81,13 +73,7 @@ export function useSimulationSocket() {
       const currentToken = useAuthStore.getState().token;
       if (!currentToken) return;
 
-      getHistory(50, undefined, activeSimId)
-        .then((data) => {
-          if (useSimulationStore.getState().activeSimId === activeSimId) {
-            useHistoryStore.getState().setEntries(data as any);
-          }
-        })
-        .catch(() => {});
+      // History handled by useHistorySocket
     });
 
     socket.on('routes:list', (routes: { id: string; name: string }[]) => {

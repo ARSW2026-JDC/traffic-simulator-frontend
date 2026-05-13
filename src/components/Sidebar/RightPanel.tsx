@@ -9,11 +9,12 @@ type RightTab = 'chat' | 'history';
 
 interface Props {
   chatSocket: { socketRef: RefObject<Socket | null>; pendingTimers: React.MutableRefObject<Map<string, ReturnType<typeof setTimeout>>> };
+  historySocket: { socketRef: RefObject<Socket | null>; loadMoreRef: RefObject<(() => void) | null> };
   openMobile?: boolean;
   onCloseMobile?: () => void;
 }
 
-export default function RightPanel({ chatSocket, openMobile, onCloseMobile }: Props) {
+export default function RightPanel({ chatSocket, historySocket, openMobile, onCloseMobile }: Props) {
   const [tab, setTab] = useState<RightTab>('chat');
   const { isConnected, messages } = useChatStore();
   void onCloseMobile;
@@ -43,7 +44,7 @@ export default function RightPanel({ chatSocket, openMobile, onCloseMobile }: Pr
 
       <div className="sim-right-content">
         {tab === 'chat' && <ChatPanel chatSocket={chatSocket.socketRef} pendingTimers={chatSocket.pendingTimers} />}
-        {tab === 'history' && <HistoryPanel />}
+        {tab === 'history' && <HistoryPanel historySocket={historySocket} />}
       </div>
     </aside>
   );

@@ -321,7 +321,7 @@ export default function UserManagementPage() {
             </div>
           )}
         </div>
-        <RightPanel chatSocket={chatSocket} />
+        <RightPanel chatSocket={chatSocket} historySocket={historySocket} />
       </div>
 
       {selectedUser && editedUser && (
