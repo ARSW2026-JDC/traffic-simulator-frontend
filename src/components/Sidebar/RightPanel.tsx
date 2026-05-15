@@ -19,11 +19,8 @@ export default function RightPanel({ chatSocket, historySocket, openMobile, onCl
   const { isConnected, messages } = useChatStore();
   void onCloseMobile;
 
-  return (
+return (
     <aside className={`sim-right-panel slim ${openMobile ? 'mobile-open' : ''}`}>
-      <button className="sim-mobile-close" onClick={onCloseMobile} type="button">
-        Cerrar
-      </button>
       <div className="sim-right-tabs two-cols">
         <button
           onClick={() => setTab('chat')}
@@ -46,6 +43,10 @@ export default function RightPanel({ chatSocket, historySocket, openMobile, onCl
         {tab === 'chat' && <ChatPanel chatSocket={chatSocket.socketRef} pendingTimers={chatSocket.pendingTimers} />}
         {tab === 'history' && <HistoryPanel historySocket={historySocket} />}
       </div>
+
+      <button className="sim-mobile-close" onClick={onCloseMobile} type="button">
+        Cerrar
+      </button>
     </aside>
   );
 }
