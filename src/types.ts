@@ -98,3 +98,22 @@ export interface BBox {
   maxLng: number;
   maxLat: number;
 }
+
+export interface SimulationStats {
+  avgSpeed: number
+  vehicleCount: number
+  movingCount: number
+  stoppedCount: number
+  waitingCount: number
+  redLightCount: number
+  greenLightCount: number
+  yellowLightCount: number
+  totalLights: number
+  mostCongestedEdge: {
+    edgeId: number
+    highwayType: string
+    vehicleCount: number
+  } | null
+  tick: number
+  timestamp: number
+}

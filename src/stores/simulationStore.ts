@@ -6,6 +6,7 @@ import type {
   RouteInfo,
   SimulationSummary,
   BBox,
+  SimulationStats,
 } from '../types';
 
 interface SimulationStore {
@@ -23,6 +24,8 @@ interface SimulationStore {
   addMode: 'vehicle' | 'trafficLight' | null;
   clickPosition: { lat: number; lng: number } | null;
   errorMessage: string | null;
+  simStats: SimulationStats | null;
+  setSimStats: (stats: SimulationStats) => void;
   setFullState: (
     vehicles: Record<string, Vehicle>,
     trafficLights: Record<string, TrafficLight>,
@@ -57,8 +60,12 @@ export const useSimulationStore = create<SimulationStore>((set) => ({
   addMode: null,
   clickPosition: null,
   errorMessage: null,
+  simStats: null,
 
-  setFullState: (vehicles, trafficLights, tick) => set({ vehicles, trafficLights, tick }),
+  setFullState: (vehicles, trafficLights, tick) =>
+    set({ vehicles, trafficLights, tick, simStats: null }),
+
+  setSimStats: (simStats) => set({ simStats }),
 
   applyDelta: (delta) =>
     set((state) => {

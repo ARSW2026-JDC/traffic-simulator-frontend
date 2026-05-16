@@ -1,10 +1,11 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, Fragment } from 'react';
 import { MapContainer, Rectangle, TileLayer, Circle, useMap, useMapEvents } from 'react-leaflet';
 import { useSimulationStore } from '../../stores/simulationStore';
 import { BASEMAPS, DEFAULT_BASEMAP_ID } from './basemaps';
 import { useAuthStore } from '../../stores/authStore';
 import VehicleMarker from './VehicleMarker';
 import TrafficLightMarker from './TrafficLightMarker';
+import StatsBar from './StatsBar';
 import type { RefObject } from 'react';
 import type { Socket } from 'socket.io-client';
 
@@ -164,23 +165,26 @@ export default function MapView({ simSocket }: Props) {
     BASEMAPS[0];
 
   return (
-    <MapContainer
-      center={DEFAULT_CENTER}
-      zoom={DEFAULT_ZOOM}
-      className="w-full h-full"
-      zoomControl={false}
-    >
-      <TileLayer
-        url={basemap.url}
-        attribution={basemap.attribution}
-        subdomains={basemap.subdomains}
-        maxZoom={basemap.maxZoom ?? 19}
-      />
-      <CustomZoomControls />
-      <SimulationViewportController />
-      <BboxSelector />
-      <PickHandler />
-      <Markers simSocket={simSocket} />
-    </MapContainer>
+    <Fragment>
+      <MapContainer
+        center={DEFAULT_CENTER}
+        zoom={DEFAULT_ZOOM}
+        className="w-full h-full"
+        zoomControl={false}
+      >
+        <TileLayer
+          url={basemap.url}
+          attribution={basemap.attribution}
+          subdomains={basemap.subdomains}
+          maxZoom={basemap.maxZoom ?? 19}
+        />
+        <CustomZoomControls />
+        <SimulationViewportController />
+        <BboxSelector />
+        <PickHandler />
+        <Markers simSocket={simSocket} />
+      </MapContainer>
+      <StatsBar />
+    </Fragment>
   );
 }

@@ -13,8 +13,8 @@ interface Props {
 }
 
 const ENTITY_CONFIG: Record<string, { label: string; color: string }> = {
-  vehicle: { label: 'Vehiculo', color: '#3b82f6' },
-  trafficLight: { label: 'Semaforo', color: '#eab308' },
+  vehicle: { label: 'Vehículo', color: '#3b82f6' },
+  trafficLight: { label: 'Semáforo', color: '#eab308' },
 };
 
 const ACTION_COLORS: Record<string, string> = {
