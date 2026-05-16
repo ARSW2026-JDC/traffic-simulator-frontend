@@ -66,14 +66,10 @@ export const useSimulationStore = create<SimulationStore>((set) => ({
       const trafficLights = { ...state.trafficLights };
 
       for (const [id, patch] of Object.entries(delta.vehicles)) {
-        if (vehicles[id]) {
-          vehicles[id] = { ...vehicles[id], ...patch } as Vehicle;
-        }
+        vehicles[id] = { ...(vehicles[id] as Partial<Vehicle>), ...patch } as Vehicle;
       }
       for (const [id, patch] of Object.entries(delta.trafficLights)) {
-        if (trafficLights[id]) {
-          trafficLights[id] = { ...trafficLights[id], ...patch } as TrafficLight;
-        }
+        trafficLights[id] = { ...(trafficLights[id] as Partial<TrafficLight>), ...patch } as TrafficLight;
       }
       for (const id of delta.removed) {
         delete vehicles[id];
