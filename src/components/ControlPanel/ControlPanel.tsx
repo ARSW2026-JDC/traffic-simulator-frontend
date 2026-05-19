@@ -133,7 +133,7 @@ export default function ControlPanel({ simSocket }: Props) {
               onClick={deselect}
               className="text-[var(--s-sub)] hover:text-[var(--s-text)] text-xs transition-colors"
             >
-              Deselect
+              Deseleccionar
             </button>
           </div>
 
