@@ -24,4 +24,7 @@ vi.mock('firebase/auth', () => ({
     callback(null);
     return vi.fn();
   }),
+  setPersistence: vi.fn().mockResolvedValue(undefined),
+  inMemoryPersistence: 'inMemory',
+  browserLocalPersistence: 'local',
 }));

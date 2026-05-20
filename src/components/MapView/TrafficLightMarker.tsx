@@ -4,6 +4,12 @@ import type { TrafficLight } from '../../types';
 
 const STATE_COLORS = { green: '#22c55e', yellow: '#f59e0b', red: '#ef4444' };
 
+export function getLightLabel(state: string): string {
+  if (state === 'green') return 'Verde';
+  if (state === 'yellow') return 'Amarillo';
+  return 'Rojo';
+}
+
 interface Props {
   light: TrafficLight;
 }
@@ -31,7 +37,7 @@ export default function TrafficLightMarker({ light }: Props) {
     >
       <Tooltip direction="top" offset={[0, -8]} opacity={0.9}>
         <span className="text-xs">
-          {light.name} — {light.state}
+          {light.name} — {getLightLabel(light.state)}
         </span>
       </Tooltip>
     </CircleMarker>

@@ -77,9 +77,13 @@ export default function ControlPanel({ simSocket }: Props) {
           <h3 className="text-sm text-[var(--s-text)] font-medium">Simulacion</h3>
           <button
             onClick={requestList}
-            className="text-xs text-[#2258B1] hover:text-[#1a46a0] transition-colors"
+            className="text-[#2258B1] hover:text-[#1a46a0] transition-colors p-1 rounded"
+            title="Actualizar"
           >
-            Actualizar
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="23 4 23 10 17 10" />
+              <path d="M20.49 15a9 9 0 11-2.12-9.36L23 10" />
+            </svg>
           </button>
         </div>
         <select
@@ -117,9 +121,9 @@ export default function ControlPanel({ simSocket }: Props) {
       {!entity ? (
         <div className="flex flex-col items-center justify-center p-6 text-center">
           <div className="text-4xl mb-3">🗺️</div>
-          <p className="text-[var(--s-sub)] text-xs">Click on a vehicle or traffic light on the map to select it.</p>
+          <p className="text-[var(--s-sub)] text-xs">Haz clic en un vehículo o semáforo del mapa para seleccionarlo.</p>
           {!canEdit && (
-              <p className="text-xs text-[var(--s-sub)] mt-2">Guest mode — view only.</p>
+              <p className="text-xs text-[var(--s-sub)] mt-2">Modo invitado — solo visualización.</p>
           )}
         </div>
       ) : (
@@ -133,7 +137,7 @@ export default function ControlPanel({ simSocket }: Props) {
               onClick={deselect}
               className="text-[var(--s-sub)] hover:text-[var(--s-text)] text-xs transition-colors"
             >
-              Deselect
+              Deseleccionar
             </button>
           </div>
 
@@ -157,6 +161,24 @@ export default function ControlPanel({ simSocket }: Props) {
       )}
     </div>
   );
+}
+
+export function statusColor(s: string): string {
+  if (s === 'moving') return 'bg-green-400';
+  if (s === 'waiting') return 'bg-yellow-400';
+  return 'bg-red-400';
+}
+
+export function statusLabel(s: string): string {
+  if (s === 'moving') return 'En movimiento';
+  if (s === 'waiting') return 'Esperando';
+  return 'Detenido';
+}
+
+export function lightStateLabel(s: string): string {
+  if (s === 'green') return 'Verde';
+  if (s === 'yellow') return 'Amarillo';
+  return 'Rojo';
 }
 
 function VehicleControls({
@@ -200,16 +222,8 @@ function VehicleControls({
       <div className="bg-[var(--s-gray)] rounded-lg p-3 space-y-1">
         <p className="text-xs text-[var(--s-sub)]">Estado</p>
         <div className="flex items-center gap-2">
-          <div
-            className={`w-2 h-2 rounded-full ${
-              vehicle.status === 'moving'
-                ? 'bg-green-400'
-                : vehicle.status === 'waiting'
-                  ? 'bg-yellow-400'
-                  : 'bg-red-400'
-            }`}
-          />
-          <span className="text-xs text-[var(--s-text)] capitalize">{vehicle.status}</span>
+          <div className={`w-2 h-2 rounded-full ${statusColor(vehicle.status)}`} />
+          <span className="text-xs text-[var(--s-text)] capitalize">{statusLabel(vehicle.status)}</span>
         </div>
       </div>
 
@@ -339,7 +353,9 @@ function LightControls({
       <div className="bg-[var(--s-gray)] rounded-lg p-3 flex items-center gap-3">
         <div className={`w-4 h-4 rounded-full ${stateColors[light.state]}`} />
         <div>
-          <p className="text-xs text-[var(--s-text)] capitalize">{light.state}</p>
+          <p className="text-xs text-[var(--s-text)]">
+            {lightStateLabel(light.state)}
+          </p>
         </div>
       </div>
 

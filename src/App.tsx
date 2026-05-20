@@ -7,6 +7,7 @@ import { useThemeStore } from './stores/themeStore';
 import AuthPage from './pages/AuthPage';
 import SimulationPage from './pages/SimulationPage';
 import LandingPage from './pages/LandingPage';
+import LoadingScreen from './components/ui/LoadingScreen';
 import { verifyToken } from './services/api';
 import { User } from 'firebase/auth/cordova';
 
@@ -45,15 +46,21 @@ export default function App() {
     return unsub;
   }, []);
 
+  let content;
+  if (isLoading) {
+    content = <LoadingScreen />;
+  } else if (firebaseUser && user) {
+    content = <SimulationPage />;
+  } else {
+    content = <Navigate to="/landing" replace />;
+  }
+
   return (
     <BrowserRouter>
 <Routes>
         <Route path="/landing" element={<LandingPage />} />
         <Route path="/auth" element={<AuthPage />} />
-        <Route
-          path="/"
-          element={isLoading ? null : firebaseUser && user ? <SimulationPage /> : <Navigate to="/landing" replace />}
-        />
+        <Route path="/" element={content} />
         <Route path="*" element={<Navigate to="/landing" replace />} />
       </Routes>
     </BrowserRouter>

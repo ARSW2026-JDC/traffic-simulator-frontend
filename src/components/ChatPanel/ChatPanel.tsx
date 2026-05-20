@@ -133,9 +133,13 @@ export default function ChatPanel({ chatSocket, pendingTimers }: Props) {
             <button
               onClick={send}
               disabled={!input.trim() || !isConnected}
-              className="px-3 py-2 bg-blue-600 dark:bg-[#3B82F6] hover:bg-blue-700 dark:hover:bg-[#2563eb] disabled:opacity-40 text-white text-sm rounded-lg transition-colors"
+              aria-label="Enviar mensaje"
+              className="px-3 py-2 bg-blue-600 dark:bg-[#3B82F6] hover:bg-blue-700 dark:hover:bg-[#2563eb] disabled:opacity-40 text-white rounded-lg transition-colors flex-shrink-0"
             >
-              Enviar
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="22" y1="2" x2="11" y2="13" />
+                <polygon points="22 2 15 22 11 13 2 9 22 2" />
+              </svg>
             </button>
           </div>
         </div>

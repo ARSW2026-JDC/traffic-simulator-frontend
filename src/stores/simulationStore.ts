@@ -6,6 +6,7 @@ import type {
   RouteInfo,
   SimulationSummary,
   BBox,
+  SimulationStats,
 } from '../types';
 
 interface SimulationStore {
@@ -20,9 +21,15 @@ interface SimulationStore {
   activeSimId: string | null;
   bbox: BBox | null;
   basemapId: string;
+  leftPanelTab: 'control' | 'admin';
   addMode: 'vehicle' | 'trafficLight' | null;
   clickPosition: { lat: number; lng: number } | null;
   errorMessage: string | null;
+  simStats: SimulationStats | null;
+  highlightPosition: { lat: number; lng: number } | null;
+  setSimStats: (stats: SimulationStats | null) => void;
+  setHighlightPosition: (pos: { lat: number; lng: number } | null) => void;
+  setLeftPanelTab: (tab: 'control' | 'admin') => void;
   setFullState: (
     vehicles: Record<string, Vehicle>,
     trafficLights: Record<string, TrafficLight>,
@@ -54,11 +61,18 @@ export const useSimulationStore = create<SimulationStore>((set) => ({
   activeSimId: null,
   bbox: null,
   basemapId: 'cartoLight',
+  leftPanelTab: 'control',
   addMode: null,
   clickPosition: null,
   errorMessage: null,
+  simStats: null,
+  highlightPosition: null,
 
-  setFullState: (vehicles, trafficLights, tick) => set({ vehicles, trafficLights, tick }),
+  setFullState: (vehicles, trafficLights, tick) =>
+    set({ vehicles, trafficLights, tick, simStats: null }),
+
+  setSimStats: (simStats) => set({ simStats }),
+  setHighlightPosition: (highlightPosition) => set({ highlightPosition }),
 
   applyDelta: (delta) =>
     set((state) => {
@@ -66,14 +80,10 @@ export const useSimulationStore = create<SimulationStore>((set) => ({
       const trafficLights = { ...state.trafficLights };
 
       for (const [id, patch] of Object.entries(delta.vehicles)) {
-        if (vehicles[id]) {
-          vehicles[id] = { ...vehicles[id], ...patch } as Vehicle;
-        }
+        vehicles[id] = { ...(vehicles[id] as Partial<Vehicle>), ...patch } as Vehicle;
       }
       for (const [id, patch] of Object.entries(delta.trafficLights)) {
-        if (trafficLights[id]) {
-          trafficLights[id] = { ...trafficLights[id], ...patch } as TrafficLight;
-        }
+        trafficLights[id] = { ...(trafficLights[id] as Partial<TrafficLight>), ...patch } as TrafficLight;
       }
       for (const id of delta.removed) {
         delete vehicles[id];
@@ -91,6 +101,7 @@ export const useSimulationStore = create<SimulationStore>((set) => ({
   setActiveSimId: (activeSimId) => set({ activeSimId }),
   setBbox: (bbox) => set({ bbox }),
   setBasemapId: (basemapId) => set({ basemapId }),
+  setLeftPanelTab: (leftPanelTab) => set({ leftPanelTab }),
   setAddMode: (addMode) => set({ addMode }),
   setClickPosition: (clickPosition) => set({ clickPosition }),
   setErrorMessage: (errorMessage) => set({ errorMessage }),

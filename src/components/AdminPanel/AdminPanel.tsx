@@ -133,6 +133,7 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
 
   const removeSimulation = async (id: string) => {
     if (!id) return;
+    if (!confirm('¿Eliminar esta simulación?\nEsta acción no se puede deshacer.')) return;
     setDeletingId(id);
     setError('');
     try {
@@ -158,7 +159,7 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
       return;
     }
     if (useDriverMix && !driverMixValid) {
-      setCreateError('DriverMix debe sumar 1.');
+      setCreateError('La mezcla de conductores debe sumar 1.');
       return;
     }
 
@@ -304,13 +305,17 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
           <h3 className="text-sm text-black dark:text-[var(--s-text)] font-medium">Simulaciones activas</h3>
           <button
             onClick={loadAll}
-            className="text-xs text-[#2258B1] hover:text-[#1a46a0] transition-colors"
+            className="text-[#2258B1] hover:text-[#1a46a0] transition-colors p-1 rounded"
+            title="Actualizar"
           >
-            Actualizar
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="23 4 23 10 17 10" />
+              <path d="M20.49 15a9 9 0 11-2.12-9.36L23 10" />
+            </svg>
           </button>
         </div>
 
-        {loading && <p className="text-xs text-[var(--s-sub)]">Cargando...</p>}
+        {loading && <div className="flex items-center gap-2"><div className="w-4 h-4 border-2 border-[#2258B1] rounded-full border-t-2 border-transparent animate-spin" /><span className="text-xs text-[var(--s-sub)]">Cargando...</span></div>}
         {error && <p className="text-xs text-red-400">{error}</p>}
 
         {list.length === 0 && !loading ? (
@@ -326,9 +331,20 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
                     <button
                       onClick={() => removeSimulation(sim.simId)}
                       disabled={deletingId === sim.simId}
-                      className="text-xs text-red-400 hover:text-red-300 disabled:opacity-50 transition-colors"
+                      className="text-red-400 hover:text-red-300 disabled:opacity-50 transition-colors p-1 rounded"
+                      title="Eliminar simulación"
                     >
-                      {deletingId === sim.simId ? 'Eliminando...' : 'Eliminar'}
+                      {deletingId === sim.simId ? (
+                        <span className="text-xs">Eliminando...</span>
+                      ) : (
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                          <polyline points="3 6 5 6 21 6" />
+                          <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                          <path d="M10 11v6" />
+                          <path d="M14 11v6" />
+                          <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+                        </svg>
+                      )}
                     </button>
                   </div>
                 </div>
@@ -395,13 +411,17 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
           <h3 className="text-sm text-[var(--s-text)] font-medium">Mapas disponibles</h3>
           <button
             onClick={loadMaps}
-            className="text-xs text-[#2258B1] hover:text-[#1a46a0] transition-colors"
+            className="text-[#2258B1] hover:text-[#1a46a0] transition-colors p-1 rounded"
+            title="Actualizar"
           >
-            Actualizar
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="23 4 23 10 17 10" />
+              <path d="M20.49 15a9 9 0 11-2.12-9.36L23 10" />
+            </svg>
           </button>
         </div>
 
-        {mapsLoading && <p className="text-xs text-[var(--s-sub)]">Cargando...</p>}
+        {mapsLoading && <div className="flex items-center gap-2"><div className="w-4 h-4 border-2 border-[#2258B1] rounded-full border-t-2 border-transparent animate-spin" /><span className="text-xs text-[var(--s-sub)]">Cargando...</span></div>}
         {mapsError && <p className="text-xs text-red-400">{mapsError}</p>}
 
         {maps.length === 0 && !mapsLoading ? (
@@ -421,9 +441,13 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
         )}
       </section>
 
-      <section className="space-y-2">
+      <details className="space-y-2 group">
+        <summary className="text-sm font-medium text-[var(--s-text)] cursor-pointer list-none flex items-center gap-2 p-1 rounded hover:bg-[var(--s-gray)] transition-colors">
+          <span className="text-xs transition-transform group-open:rotate-90">▶</span>{' '}
+          Importar mapa
+        </summary>
+        <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <h3 className="text-sm text-[var(--s-text)] font-medium">Importar mapa</h3>
           <button
             type="button"
             onClick={fillFromBbox}
@@ -491,7 +515,7 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
           </div>
 
           <div className="flex items-center justify-between text-xs text-[var(--s-sub)]">
-            <span>{bboxValid ? 'BBox valido' : 'BBox invalido'}</span>
+            <span>{bboxValid ? 'Área válida' : 'Área inválida'}</span>
             <button
               type="button"
               onClick={clearBbox}
@@ -550,7 +574,8 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
             </pre>
           </div>
         </div>
-      </section>
+      </div>
+      </details>
 
       <section className="space-y-2">
         <h3 className="text-sm text-[var(--s-text)] font-medium">Crear simulación</h3>
@@ -589,7 +614,7 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
               onChange={(e) => setUseDriverMix(e.target.checked)}
               className="accent-[#2258B1]"
             />
-            Usar driverMix (debe sumar 1)
+            Usar mezcla de conductores (debe sumar 1)
           </label>
 
           {useDriverMix && (
@@ -682,7 +707,8 @@ function EntityList({
   type: 'vehicle' | 'trafficLight';
   simSocket: RefObject<Socket | null>;
 }) {
-  const { vehicles, trafficLights, activeSimId } = useSimulationStore();
+  const { vehicles, trafficLights, activeSimId, selectEntity, setLeftPanelTab } =
+    useSimulationStore();
   const items =
     type === 'vehicle' ? Object.values(vehicles) : Object.values(trafficLights);
 
@@ -716,17 +742,38 @@ function EntityList({
   return (
     <div className="divide-y divide-[var(--s-border)] border-y border-[var(--s-border)]">
       {items.map((item) => (
-        <div key={item.id} className="px-4 py-3 flex items-center justify-between">
+        <div
+          key={item.id}
+          className="px-4 py-3 flex items-center justify-between hover:bg-[var(--s-hover)] transition-colors"
+        >
           <div>
             <p className="text-sm text-[var(--s-text)]">{item.name}</p>
             <p className="text-xs text-[var(--s-sub)] font-mono">{item.id}</p>
           </div>
-          <button
-            onClick={() => remove(item.id)}
-            className="text-xs text-red-400 hover:text-red-300 transition-colors"
-          >
-            Eliminar
-          </button>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => { selectEntity(item.id, type); setLeftPanelTab('control'); }}
+              className="text-[#2258B1] hover:text-[#1a46a0] transition-colors p-1 rounded"
+              title="Editar"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M17 3a2.85 2.85 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
+              </svg>
+            </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); remove(item.id); }}
+              className="text-red-400 hover:text-red-300 transition-colors p-1 rounded"
+              title="Eliminar"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="3 6 5 6 21 6" />
+                <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
+                <path d="M10 11v6" />
+                <path d="M14 11v6" />
+                <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2" />
+              </svg>
+            </button>
+          </div>
         </div>
       ))}
     </div>

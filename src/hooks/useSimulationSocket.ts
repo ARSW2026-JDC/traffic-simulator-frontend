@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { useSimulationStore } from '../stores/simulationStore';
 import { useAuthStore } from '../stores/authStore';
-import type { SimulationFullState, SimulationDelta, SimulationSummary } from '../types';
+import type { SimulationFullState, SimulationDelta, SimulationSummary, SimulationStats } from '../types';
 
 const GATEWAY = import.meta.env.VITE_GATEWAY_URL || 'http://localhost:3000';
 
@@ -20,6 +20,7 @@ export function useSimulationSocket() {
     setSimulationList,
     setActiveSimId,
     setErrorMessage,
+    setSimStats,
     deselect,
   } = useSimulationStore();
 
@@ -111,6 +112,10 @@ export function useSimulationSocket() {
         setRoutes([]);
         deselect();
       }
+    });
+
+    socket.on('simulation:stats', (stats: SimulationStats) => {
+      setSimStats(stats);
     });
 
     socket.on('error', (error: { message: string }) => {

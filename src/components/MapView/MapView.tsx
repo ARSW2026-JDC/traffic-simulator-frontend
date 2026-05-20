@@ -1,10 +1,11 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, Fragment } from 'react';
 import { MapContainer, Rectangle, TileLayer, Circle, useMap, useMapEvents } from 'react-leaflet';
 import { useSimulationStore } from '../../stores/simulationStore';
 import { BASEMAPS, DEFAULT_BASEMAP_ID } from './basemaps';
 import { useAuthStore } from '../../stores/authStore';
 import VehicleMarker from './VehicleMarker';
 import TrafficLightMarker from './TrafficLightMarker';
+import StatsBar from './StatsBar';
 import type { RefObject } from 'react';
 import type { Socket } from 'socket.io-client';
 
@@ -128,6 +129,40 @@ function BboxSelector() {
   );
 }
 
+function HighlightedEdge() {
+  const map = useMap()
+  const highlightPosition = useSimulationStore((s) => s.highlightPosition)
+  const setHighlightPosition = useSimulationStore((s) => s.setHighlightPosition)
+
+  useEffect(() => {
+    if (!highlightPosition) return
+    map.flyTo([highlightPosition.lat, highlightPosition.lng], 16, { duration: 0.8 })
+    const timer = setTimeout(() => setHighlightPosition(null), 5000)
+    return () => clearTimeout(timer)
+  }, [highlightPosition, map, setHighlightPosition])
+
+  if (!highlightPosition) return null
+
+  const { lat, lng } = highlightPosition
+  const halfDeg = 0.00045
+  const bounds: [[number, number], [number, number]] = [
+    [lat - halfDeg, lng - halfDeg],
+    [lat + halfDeg, lng + halfDeg],
+  ]
+
+  return (
+    <Rectangle
+      bounds={bounds}
+      pathOptions={{
+        color: '#2258B1',
+        fillColor: '#2258B1',
+        fillOpacity: 0.2,
+        weight: 2,
+      }}
+    />
+  )
+}
+
 function PickHandler() {
   const addMode = useSimulationStore((s) => s.addMode);
   const clickPosition = useSimulationStore((s) => s.clickPosition);
@@ -164,23 +199,27 @@ export default function MapView({ simSocket }: Props) {
     BASEMAPS[0];
 
   return (
-    <MapContainer
-      center={DEFAULT_CENTER}
-      zoom={DEFAULT_ZOOM}
-      className="w-full h-full"
-      zoomControl={false}
-    >
-      <TileLayer
-        url={basemap.url}
-        attribution={basemap.attribution}
-        subdomains={basemap.subdomains}
-        maxZoom={basemap.maxZoom ?? 19}
-      />
-      <CustomZoomControls />
-      <SimulationViewportController />
-      <BboxSelector />
-      <PickHandler />
-      <Markers simSocket={simSocket} />
-    </MapContainer>
+    <Fragment>
+      <MapContainer
+        center={DEFAULT_CENTER}
+        zoom={DEFAULT_ZOOM}
+        className="w-full h-full"
+        zoomControl={false}
+      >
+        <TileLayer
+          url={basemap.url}
+          attribution={basemap.attribution}
+          subdomains={basemap.subdomains}
+          maxZoom={basemap.maxZoom ?? 19}
+        />
+        <CustomZoomControls />
+        <SimulationViewportController />
+        <BboxSelector />
+        <PickHandler />
+        <HighlightedEdge />
+        <Markers simSocket={simSocket} />
+      </MapContainer>
+      <StatsBar />
+    </Fragment>
   );
 }

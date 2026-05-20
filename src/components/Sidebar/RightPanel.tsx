@@ -44,8 +44,8 @@ return (
         {tab === 'history' && <HistoryPanel historySocket={historySocket} />}
       </div>
 
-      <button className="sim-mobile-close" onClick={onCloseMobile} type="button">
-        Cerrar
+      <button className="sim-mobile-close" onClick={onCloseMobile} type="button" aria-label="Cerrar panel">
+        ✕
       </button>
     </aside>
   );

@@ -137,3 +137,38 @@ describe('Auto-activation logic from AdminPanel', () => {
     expect(lon).toBe(-74.0721);
   });
 });
+
+describe('HighlightedEdge logic', () => {
+  beforeEach(() => {
+    useSimulationStore.getState().setHighlightPosition(null);
+  });
+
+  it('should start with null highlightPosition', () => {
+    expect(useSimulationStore.getState().highlightPosition).toBeNull();
+  });
+
+  it('should set highlightPosition', () => {
+    const pos = { lat: 4.711, lng: -74.0721 };
+    useSimulationStore.getState().setHighlightPosition(pos);
+    expect(useSimulationStore.getState().highlightPosition).toEqual(pos);
+  });
+
+  it('should clear highlightPosition', () => {
+    useSimulationStore.getState().setHighlightPosition({ lat: 4.711, lng: -74.0721 });
+    useSimulationStore.getState().setHighlightPosition(null);
+    expect(useSimulationStore.getState().highlightPosition).toBeNull();
+  });
+
+  it('should compute correct bounds for rectangle', () => {
+    const highlightPosition = { lat: 4.711, lng: -74.0721 };
+    const halfDeg = 0.00045;
+    const bounds: [[number, number], [number, number]] = [
+      [highlightPosition.lat - halfDeg, highlightPosition.lng - halfDeg],
+      [highlightPosition.lat + halfDeg, highlightPosition.lng + halfDeg],
+    ];
+    expect(bounds[0][0]).toBeCloseTo(4.71055, 5);
+    expect(bounds[0][1]).toBeCloseTo(-74.07255, 5);
+    expect(bounds[1][0]).toBeCloseTo(4.71145, 5);
+    expect(bounds[1][1]).toBeCloseTo(-74.07165, 5);
+  });
+});

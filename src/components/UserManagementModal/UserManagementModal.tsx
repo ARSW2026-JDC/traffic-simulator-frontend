@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { getAllUsers, updateUserRole, updateUserEstatus, deleteUser } from '../../services/api';
 import { useAuthStore } from '../../stores/authStore';
+import ConfirmDialog from '../ui/ConfirmDialog';
 import './UserManagementModal.css';
 
 export type UserRole = 'USER' | 'ADMIN';
@@ -75,7 +76,7 @@ function DropdownButton({
         <span className="custom-dropdown-arrow">▼</span>
       </button>
       {open && (
-        <div className="custom-dropdown-menu" onClick={(e) => e.stopPropagation()}>
+        <div className="custom-dropdown-menu" role="listbox" onClick={(e) => e.stopPropagation()}>
           {options.map((opt) => (
             <button
               key={opt.value}
@@ -110,6 +111,7 @@ export default function UserManagementModal({ onClose }: Props) {
   const [modalError, setModalError] = useState('');
   const [isClosing, setIsClosing] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [confirmAction, setConfirmAction] = useState<{ type: 'delete'; user: User } | { type: 'discard' } | null>(null);
   const modalRef = useRef<HTMLDivElement>(null);
 
   const loadUsers = async () => {
@@ -199,11 +201,13 @@ export default function UserManagementModal({ onClose }: Props) {
       setError('No puedes eliminar tu propio usuario.');
       return;
     }
-    const label = user.name || user.email || 'este usuario';
-    const confirmed = window.confirm(
-      `¿Eliminar ${label}?\nEsto borrará su historial y mensajes asociados.`,
-    );
-    if (!confirmed) return;
+    setConfirmAction({ type: 'delete', user });
+  };
+
+  const executeDelete = async () => {
+    if (!confirmAction || confirmAction.type !== 'delete') return;
+    const user = confirmAction.user;
+    setConfirmAction(null);
 
     setDeletingId(user.id);
     setError('');
@@ -224,9 +228,8 @@ export default function UserManagementModal({ onClose }: Props) {
   const handleCancel = (e?: React.MouseEvent) => {
     e?.stopPropagation();
     if (hasChanges) {
-      if (!window.confirm('¿Descartar los cambios?')) {
-        return;
-      }
+      setConfirmAction({ type: 'discard' });
+      return;
     }
     closeEditModal();
   };
@@ -235,9 +238,7 @@ export default function UserManagementModal({ onClose }: Props) {
     e.stopPropagation();
     if (saving || isClosing) return;
     if (hasChanges) {
-      if (window.confirm('¿Descartar los cambios?')) {
-        closeEditModal();
-      }
+      setConfirmAction({ type: 'discard' });
     } else {
       closeEditModal();
     }
@@ -249,9 +250,7 @@ export default function UserManagementModal({ onClose }: Props) {
       if (saving || isClosing) return;
       if (selectedUser) {
         if (hasChanges) {
-          if (window.confirm('¿Descartar los cambios?')) {
-            closeEditModal();
-          }
+          setConfirmAction({ type: 'discard' });
         } else {
           closeEditModal();
         }
@@ -260,6 +259,11 @@ export default function UserManagementModal({ onClose }: Props) {
       }
     }
   }, [selectedUser, hasChanges, saving, isClosing, onClose, closeEditModal]);
+
+  const executeDiscard = () => {
+    setConfirmAction(null);
+    closeEditModal();
+  };
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
@@ -287,7 +291,7 @@ export default function UserManagementModal({ onClose }: Props) {
 
   return (
     <div className="umm-overlay">
-      <div className="umm-popup" ref={modalRef} onClick={(e) => e.stopPropagation()}>
+      <div className="umm-popup" ref={modalRef} role="none" onClick={(e) => e.stopPropagation()}>
         <div className="umm-header">
           <h2>Gestión de Usuarios</h2>
           <button onClick={(e) => { e.stopPropagation(); onClose(); }} className="umm-close" aria-label="Cerrar">×</button>
@@ -325,7 +329,7 @@ export default function UserManagementModal({ onClose }: Props) {
         {error && <div className="umm-error">{error}</div>}
 
         {loading ? (
-          <div className="umm-loading">Cargando...</div>
+          <div className="umm-loading"><div className="inline-block w-4 h-4 border-2 border-[#2258B1] rounded-full border-t-2 border-transparent animate-spin mr-2 align-middle" />Cargando...</div>
         ) : filteredUsers.length === 0 ? (
           <div className="umm-empty">Sin usuarios</div>
         ) : (
@@ -408,8 +412,8 @@ export default function UserManagementModal({ onClose }: Props) {
       </div>
 
       {selectedUser && editedUser && (
-        <div className="umm-edit-overlay" onClick={handleOuterClose}>
-          <div className="umm-edit-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="umm-edit-overlay" role="presentation" onClick={handleOuterClose}>
+          <div className="umm-edit-modal" role="none" onClick={(e) => e.stopPropagation()}>
             <div className="umm-edit-header">
               <h3>Editar</h3>
               <button onClick={handleCancel} className="umm-edit-close" disabled={saving}>×</button>
@@ -482,6 +486,19 @@ export default function UserManagementModal({ onClose }: Props) {
           </div>
         </div>
       )}
+
+      <ConfirmDialog
+        open={confirmAction !== null}
+        title={confirmAction?.type === 'delete' ? 'Eliminar usuario' : 'Descartar cambios'}
+        message={
+          confirmAction?.type === 'delete'
+            ? `¿Eliminar ${confirmAction.user.name || confirmAction.user.email || 'este usuario'}?\nEsto borrará su historial y mensajes asociados.`
+            : '¿Descartar los cambios sin guardar?'
+        }
+        confirmLabel={confirmAction?.type === 'delete' ? 'Eliminar' : 'Descartar'}
+        onConfirm={confirmAction?.type === 'delete' ? executeDelete : executeDiscard}
+        onCancel={() => setConfirmAction(null)}
+      />
     </div>
   );
 }

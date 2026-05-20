@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { useSimulationStore } from './simulationStore';
+import { createSimStats } from '../test/factories';
 
 describe('simulationStore', () => {
   beforeEach(() => {
@@ -225,6 +226,73 @@ describe('simulationStore', () => {
       useSimulationStore.getState().setConnected(true);
       useSimulationStore.getState().setConnected(false);
       expect(useSimulationStore.getState().isConnected).toBe(false);
+    });
+  });
+
+  describe('leftPanelTab', () => {
+    it('should start with control tab', () => {
+      expect(useSimulationStore.getState().leftPanelTab).toBe('control');
+    });
+
+    it('should set tab to admin', () => {
+      useSimulationStore.getState().setLeftPanelTab('admin');
+      expect(useSimulationStore.getState().leftPanelTab).toBe('admin');
+    });
+
+    it('should switch back to control', () => {
+      useSimulationStore.getState().setLeftPanelTab('admin');
+      useSimulationStore.getState().setLeftPanelTab('control');
+      expect(useSimulationStore.getState().leftPanelTab).toBe('control');
+    });
+  });
+
+  describe('simStats', () => {
+    it('should start null', () => {
+      expect(useSimulationStore.getState().simStats).toBeNull();
+    });
+
+    it('should set simStats', () => {
+      const stats = createSimStats();
+      useSimulationStore.getState().setSimStats(stats);
+      expect(useSimulationStore.getState().simStats).toEqual(stats);
+    });
+
+    it('should clear simStats when setFullState is called', () => {
+      useSimulationStore.getState().setSimStats(createSimStats());
+      useSimulationStore.getState().setFullState({}, {}, 0);
+      expect(useSimulationStore.getState().simStats).toBeNull();
+    });
+  });
+
+  describe('highlightPosition', () => {
+    it('should start null', () => {
+      expect(useSimulationStore.getState().highlightPosition).toBeNull();
+    });
+
+    it('should set highlightPosition', () => {
+      const pos = { lat: 4.711, lng: -74.0721 };
+      useSimulationStore.getState().setHighlightPosition(pos);
+      expect(useSimulationStore.getState().highlightPosition).toEqual(pos);
+    });
+
+    it('should clear highlightPosition', () => {
+      useSimulationStore.getState().setHighlightPosition({ lat: 4.711, lng: -74.0721 });
+      useSimulationStore.getState().setHighlightPosition(null);
+      expect(useSimulationStore.getState().highlightPosition).toBeNull();
+    });
+  });
+
+  describe('applyDelta without guard', () => {
+    it('should apply delta to non-existent vehicle without error', () => {
+      const delta = { vehicles: { 'new-v': { speed: 15 } }, trafficLights: {}, removed: [], tick: 1, timestamp: 100 };
+      expect(() => useSimulationStore.getState().applyDelta(delta)).not.toThrow();
+      expect(useSimulationStore.getState().vehicles['new-v']?.speed).toBe(15);
+    });
+
+    it('should apply delta to non-existent traffic light without error', () => {
+      const delta = { vehicles: {}, trafficLights: { 'new-tl': { state: 'green' as const } }, removed: [], tick: 1, timestamp: 100 };
+      expect(() => useSimulationStore.getState().applyDelta(delta)).not.toThrow();
+      expect(useSimulationStore.getState().trafficLights['new-tl']?.state).toBe('green');
     });
   });
 });

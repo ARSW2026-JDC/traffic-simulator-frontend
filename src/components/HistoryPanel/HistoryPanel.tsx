@@ -13,8 +13,8 @@ interface Props {
 }
 
 const ENTITY_CONFIG: Record<string, { label: string; color: string }> = {
-  vehicle: { label: 'Vehiculo', color: '#3b82f6' },
-  trafficLight: { label: 'Semaforo', color: '#eab308' },
+  vehicle: { label: 'Vehículo', color: '#3b82f6' },
+  trafficLight: { label: 'Semáforo', color: '#eab308' },
 };
 
 const ACTION_COLORS: Record<string, string> = {
@@ -24,10 +24,16 @@ const ACTION_COLORS: Record<string, string> = {
 };
 
 const ACTION_VERBS: Record<string, string> = {
-  add: 'creo',
-  modify: 'actualizo',
-  delete: 'elimino',
+  add: 'creó',
+  modify: 'actualizó',
+  delete: 'eliminó',
 };
+
+export function actionFromField(field: string | undefined): string {
+  if (field === 'created') return 'add';
+  if (field === 'deleted') return 'delete';
+  return 'modify';
+}
 
 function formatTime(ts: number) {
   return new Intl.DateTimeFormat(undefined, {
@@ -43,7 +49,7 @@ function formatDateTime(ts: number) {
 }
 
 function getActionInfo(entry: ChangeLogEntry) {
-  const action = entry.action || (entry.field === 'created' ? 'add' : entry.field === 'deleted' ? 'delete' : 'modify');
+  const action = entry.action || actionFromField(entry.field);
   return {
     verb: ACTION_VERBS[action] || 'actualizo',
     color: ACTION_COLORS[action] || '#2563eb'
@@ -175,7 +181,7 @@ if (entries.length === 0) {
 
       {selected && (
         <div className="history-drawer-overlay" role="dialog" aria-modal="true">
-          <div className="history-drawer-backdrop" onClick={() => setSelected(null)} />
+          <div className="history-drawer-backdrop" role="presentation" onClick={() => setSelected(null)} />
           <div className="history-drawer-panel">
             <div className="history-drawer-header">
               <div>

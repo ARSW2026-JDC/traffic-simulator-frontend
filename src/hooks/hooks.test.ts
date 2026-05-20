@@ -242,6 +242,26 @@ describe('useSimulationSocket', () => {
     useSimulationStore.getState().setErrorMessage(null);
     expect(useSimulationStore.getState().errorMessage).toBeNull();
   });
+
+  it('should handle simulation:stats event', () => {
+    const stats = {
+      avgSpeed: 25,
+      vehicleCount: 10,
+      movingCount: 5,
+      stoppedCount: 3,
+      waitingCount: 2,
+      redLightCount: 3,
+      greenLightCount: 5,
+      yellowLightCount: 2,
+      totalLights: 10,
+      mostCongestedEdge: null,
+      profileCounts: { normal: 10 },
+      tick: 100,
+      timestamp: Date.now(),
+    };
+    useSimulationStore.getState().setSimStats(stats);
+    expect(useSimulationStore.getState().simStats).toEqual(stats);
+  });
 });
 
 describe('Socket Connection', () => {

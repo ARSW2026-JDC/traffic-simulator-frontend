@@ -1,11 +1,9 @@
-import { useState } from 'react';
 import type { RefObject } from 'react';
 import type { Socket } from 'socket.io-client';
 import ControlPanel from '../ControlPanel/ControlPanel';
 import AdminPanel from '../AdminPanel/AdminPanel';
 import { useAuthStore } from '../../stores/authStore';
-
-type LeftTab = 'control' | 'admin';
+import { useSimulationStore } from '../../stores/simulationStore';
 
 interface Props {
   simSocket: RefObject<Socket | null>;
@@ -14,7 +12,8 @@ interface Props {
 }
 
 export default function LeftPanel({ simSocket, openMobile, onCloseMobile }: Props) {
-  const [tab, setTab] = useState<LeftTab>('control');
+  const tab = useSimulationStore((s) => s.leftPanelTab);
+  const setTab = useSimulationStore((s) => s.setLeftPanelTab);
   const { user } = useAuthStore();
   const isAdmin = user?.role === 'ADMIN';
 
@@ -32,7 +31,7 @@ export default function LeftPanel({ simSocket, openMobile, onCloseMobile }: Prop
             onClick={() => setTab('admin')}
             className={`sim-panel-tab ${tab === 'admin' ? 'sim-panel-tab--active' : 'sim-panel-tab--idle'}`}
           >
-            Admin
+            Administración
           </button>
         )}
       </div>
@@ -42,8 +41,8 @@ export default function LeftPanel({ simSocket, openMobile, onCloseMobile }: Prop
         {tab === 'admin' && isAdmin && <AdminPanel simSocket={simSocket} />}
       </div>
 
-      <button className="sim-mobile-close" onClick={onCloseMobile} type="button">
-        Cerrar
+      <button className="sim-mobile-close" onClick={onCloseMobile} type="button" aria-label="Cerrar panel">
+        ✕
       </button>
     </aside>
   );

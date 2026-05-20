@@ -40,7 +40,7 @@ export default function SimNavbar({ simSocket: _simSocket, onToggleLeft, onToggl
       {/* Brand */}
       <div className="sim-nav-brand">
         <img src={cutsLogo} alt="CUTS" className="sim-nav-logo" />
-        <span className="sim-nav-title">CUTS - Collaborative Urban Traffic Simulator</span>
+          <span className="sim-nav-title" title="Collaborative Urban Traffic Simulator">CUTS</span>
       </div>
 
       {/* Connection dot */}

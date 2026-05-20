@@ -31,6 +31,12 @@ interface Props {
   simSocket: RefObject<Socket | null>;
 }
 
+export function getStatusLabel(status: string): string {
+  if (status === 'moving') return 'En movimiento';
+  if (status === 'waiting') return 'Esperando';
+  return 'Detenido';
+}
+
 export default function VehicleMarker({ vehicle, simSocket: _simSocket }: Props) {
   const { selectedId, selectEntity } = useSimulationStore((s) => ({
     selectedId: s.selectedId,
@@ -48,7 +54,7 @@ export default function VehicleMarker({ vehicle, simSocket: _simSocket }: Props)
     >
       <Tooltip direction="top" offset={[0, -8]} opacity={0.9}>
         <span className="text-xs">
-          {vehicle.name} — {vehicle.speed.toFixed(2)} km/h — {vehicle.status}
+          {vehicle.name} — {vehicle.speed.toFixed(2)} km/h — {getStatusLabel(vehicle.status)}
         </span>
       </Tooltip>
     </Marker>
