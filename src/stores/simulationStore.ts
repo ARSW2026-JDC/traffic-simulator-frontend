@@ -27,7 +27,7 @@ interface SimulationStore {
   errorMessage: string | null;
   simStats: SimulationStats | null;
   highlightPosition: { lat: number; lng: number } | null;
-  setSimStats: (stats: SimulationStats) => void;
+  setSimStats: (stats: SimulationStats | null) => void;
   setHighlightPosition: (pos: { lat: number; lng: number } | null) => void;
   setLeftPanelTab: (tab: 'control' | 'admin') => void;
   setFullState: (

@@ -13,7 +13,7 @@ vi.mock('../../services/api', () => ({
 }));
 
 beforeEach(() => {
-  useAuthStore.getState().setUser({ uid: 'admin-1', email: 'admin@test.com', role: 'ADMIN' });
+  useAuthStore.getState().setUser({ id: 'admin-1', email: 'admin@test.com', name: 'Admin', role: 'ADMIN', createdAt: new Date().toISOString() });
 });
 
 describe('UserManagementModal', () => {

@@ -290,7 +290,7 @@ describe('simulationStore', () => {
     });
 
     it('should apply delta to non-existent traffic light without error', () => {
-      const delta = { vehicles: {}, trafficLights: { 'new-tl': { state: 'green' } }, removed: [], tick: 1, timestamp: 100 };
+      const delta = { vehicles: {}, trafficLights: { 'new-tl': { state: 'green' as const } }, removed: [], tick: 1, timestamp: 100 };
       expect(() => useSimulationStore.getState().applyDelta(delta)).not.toThrow();
       expect(useSimulationStore.getState().trafficLights['new-tl']?.state).toBe('green');
     });

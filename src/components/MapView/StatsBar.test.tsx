@@ -34,7 +34,7 @@ describe('StatsBar visibility', () => {
     useSimulationStore.getState().setActiveSimId('sim-1');
     setSimData(3, 2);
     render(<StatsBar />);
-    const btn = screen.getByRole('button', { title: /Haz clic para ver estadísticas/ });
+    const btn = screen.getByTitle(/Haz clic para ver estadísticas/);
     expect(btn).toBeInTheDocument();
   });
 });
@@ -69,7 +69,7 @@ describe('StatsBar expanded', () => {
   });
 
   function expand() {
-    fireEvent.click(screen.getByRole('button', { title: /Haz clic/ }));
+    fireEvent.click(screen.getByTitle(/Haz clic/));
   }
 
   it('shows panel after clicking', () => {
@@ -147,7 +147,7 @@ describe('StatsBar edge cases', () => {
   it('handles zero traffic lights with vehicles present', () => {
     setSimData(1, 0);
     render(<StatsBar />);
-    const btn = screen.getByRole('button', { title: /Haz clic/ });
+    const btn = screen.getByTitle(/Haz clic/);
     expect(btn).toBeInTheDocument();
   });
 });
@@ -181,7 +181,7 @@ describe('StatsBar congested edge without vehicles', () => {
 
   it('shows congestion with 0% when no vehicles', () => {
     render(<StatsBar />);
-    fireEvent.click(screen.getByRole('button', { title: /Haz clic/ }));
+    fireEvent.click(screen.getByTitle(/Haz clic/));
     expect(screen.getByText(/0%/)).toBeInTheDocument();
   });
 });
