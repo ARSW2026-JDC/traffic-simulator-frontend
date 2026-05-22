@@ -71,7 +71,7 @@ function SimulationViewportController() {
     if (points.length === 1) {
       map.flyTo(points[0], 15, { duration: 1 });
     } else {
-      map.flyToBounds(points, { padding: [40, 40], duration: 1 });
+      map.flyToBounds(points, { padding: [40, 40], duration: 1, maxZoom: 15 });
     }
 
     lastFocusedSimRef.current = activeSimId;
