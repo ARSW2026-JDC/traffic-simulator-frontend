@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { auth } from './firebase';
+import { reportApiCall } from './frontend-metrics';
 
 const GATEWAY = import.meta.env.VITE_GATEWAY_URL || 'http://localhost:3000';
 
@@ -11,8 +12,28 @@ api.interceptors.request.use(async (config) => {
     const token = await user.getIdToken();
     config.headers.Authorization = `Bearer ${token}`;
   }
+  (config as any)._startTime = performance.now()
   return config;
 });
+
+api.interceptors.response.use(
+  (res) => {
+    const start = (res.config as any)._startTime
+    if (start) {
+      const route = (res.config.url || 'unknown').replace(/\/[0-9a-f-]{36,}/gi, '/:id').replace(/\/\d+/g, '/:id')
+      reportApiCall(res.config.method?.toUpperCase() || 'GET', route, (performance.now() - start) / 1000)
+    }
+    return res
+  },
+  (err) => {
+    if (err.config) {
+      const start = (err.config as any)._startTime
+      const route = (err.config.url || 'unknown').replace(/\/[0-9a-f-]{36,}/gi, '/:id').replace(/\/\d+/g, '/:id')
+      reportApiCall(err.config.method?.toUpperCase() || 'GET', route, start ? (performance.now() - start) / 1000 : 0)
+    }
+    return Promise.reject(err)
+  },
+)
 
 export async function verifyToken(token: string) {
   const res = await api.post('/api/auth/verify', null, {
