@@ -16,6 +16,8 @@ export default function VehicleMarker({ vehicle }: Props) {
   const selected = useSimulationStore((s) => s.selectedId === vehicle.id);
   const selectEntity = useSimulationStore((s) => s.selectEntity);
   const radius = selected ? 4 : 3;
+  const speedPct = Math.min(vehicle.speed / 80, 1);
+  const fillOpacity = 0.25 + 0.65 * speedPct;
 
   return (
     <CircleMarker
@@ -24,7 +26,7 @@ export default function VehicleMarker({ vehicle }: Props) {
       pathOptions={{
         color: selected ? '#FFFFFF' : '#111827',
         fillColor: vehicle.color,
-        fillOpacity: 0.9,
+        fillOpacity,
         weight: selected ? 2 : 1,
       }}
       eventHandlers={{
