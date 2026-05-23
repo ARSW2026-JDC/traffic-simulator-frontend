@@ -21,12 +21,12 @@ export default function TrafficLightMarker({ light }: Props) {
   return (
     <CircleMarker
       center={[light.lat, light.lon]}
-      radius={selected ? 5 : 4}
+      radius={selected ? 8 : 6}
       pathOptions={{
-        color: selected ? '#111827' : '#374151',
+        color: selected ? '#FFFFFF' : '#374151',
         fillColor: STATE_COLORS[light.state],
         fillOpacity: 0.95,
-        weight: selected ? 1.5 : 1,
+        weight: selected ? 3 : 1,
       }}
       eventHandlers={{
         click: () => selectEntity(light.id, 'trafficLight'),

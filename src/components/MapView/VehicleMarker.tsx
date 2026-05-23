@@ -15,19 +15,17 @@ export function getStatusLabel(status: string): string {
 export default function VehicleMarker({ vehicle }: Props) {
   const selected = useSimulationStore((s) => s.selectedId === vehicle.id);
   const selectEntity = useSimulationStore((s) => s.selectEntity);
-  const radius = selected ? 4 : 3;
-  const speedPct = Math.min(vehicle.speed / 80, 1);
-  const fillOpacity = 0.25 + 0.65 * speedPct;
+  const radius = selected ? 7 : 4;
 
   return (
     <CircleMarker
       center={[vehicle.lat, vehicle.lon]}
       radius={radius}
       pathOptions={{
-        color: selected ? '#FFFFFF' : '#111827',
+        color: selected ? '#FFFFFF' : 'transparent',
         fillColor: vehicle.color,
-        fillOpacity,
-        weight: selected ? 2 : 1,
+        fillOpacity: 0.95,
+        weight: selected ? 3 : 0,
       }}
       eventHandlers={{
         click: () => selectEntity(vehicle.id, 'vehicle'),

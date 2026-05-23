@@ -76,6 +76,8 @@ export const useSimulationStore = create<SimulationStore>((set) => ({
 
   applyDelta: (delta) =>
     set((state) => {
+      if (delta.tick !== undefined && delta.tick <= state.tick) return state;
+
       const vehicles = { ...state.vehicles };
       const trafficLights = { ...state.trafficLights };
 
