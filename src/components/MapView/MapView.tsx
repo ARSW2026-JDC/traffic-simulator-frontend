@@ -53,6 +53,7 @@ function SimulationViewportController() {
   const activeSimId = useSimulationStore((s) => s.activeSimId);
   const vehicles = useSimulationStore((s) => s.vehicles);
   const trafficLights = useSimulationStore((s) => s.trafficLights);
+  const fullStateSimId = useSimulationStore((s) => s.fullStateSimId);
   const lastFocusedSimRef = useRef<string | null>(null);
 
   useEffect(() => {
@@ -62,7 +63,9 @@ function SimulationViewportController() {
       return;
     }
 
+    if (fullStateSimId !== activeSimId) return;
     if (lastFocusedSimRef.current === activeSimId) return;
+
     const vehiclePoints = Object.values(vehicles).map((vehicle) => [vehicle.lat, vehicle.lon] as [number, number]);
     const lightPoints = Object.values(trafficLights).map((light) => [light.lat, light.lon] as [number, number]);
     const points = [...vehiclePoints, ...lightPoints];
@@ -75,7 +78,7 @@ function SimulationViewportController() {
     }
 
     lastFocusedSimRef.current = activeSimId;
-  }, [activeSimId, map, vehicles, trafficLights]);
+  }, [activeSimId, map, vehicles, trafficLights, fullStateSimId]);
 
   return null;
 }
