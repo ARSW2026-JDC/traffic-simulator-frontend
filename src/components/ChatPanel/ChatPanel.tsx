@@ -20,7 +20,7 @@ function genClientId(): string {
 
 export default function ChatPanel({ chatSocket, pendingTimers }: Props) {
   const { messages, isConnected, addOptimisticMessage, failMessage } = useChatStore();
-  const { user } = useAuthStore();
+  const { user, firebaseUser } = useAuthStore();
   const [input, setInput] = useState('');
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -48,7 +48,7 @@ export default function ChatPanel({ chatSocket, pendingTimers }: Props) {
     const clientId = genClientId();
     const localMsg = {
       id: 'local:' + clientId,
-      userId: user.id,
+      userId: firebaseUser?.uid || user.id,
       userName: user.name || user.email,
       content,
       timestamp: Date.now(),
@@ -81,7 +81,7 @@ export default function ChatPanel({ chatSocket, pendingTimers }: Props) {
     <div className="h-full flex flex-col">
       <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
         {messages.map((msg) => {
-          const isOwn = msg.userId === user?.id;
+          const isOwn = msg.userId === (firebaseUser?.uid || user?.id);
           return (
             <div key={msg.id} className={`flex flex-col ${isOwn ? 'items-end' : 'items-start'}`}>
               <div className="flex items-center gap-2 mb-1">
