@@ -111,7 +111,7 @@ export default function UserManagementModal({ onClose }: Props) {
   const [modalError, setModalError] = useState('');
   const [isClosing, setIsClosing] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [confirmAction, setConfirmAction] = useState<{ type: 'delete'; user: User } | { type: 'discard' } | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<User | null>(null);
   const modalRef = useRef<HTMLDivElement>(null);
 
   const loadUsers = async () => {
@@ -180,16 +180,12 @@ export default function UserManagementModal({ onClose }: Props) {
       if (editedUser.estatus !== editedUser.originalEstatus) {
         await updateUserEstatus(selectedUser.id, editedUser.estatus);
       }
-      
-      setUsers(prev => prev.map(u => 
-        u.id === selectedUser.id 
-          ? { ...u, role: editedUser.role, estatus: editedUser.estatus }
-          : u
-      ));
-      
+
+      await loadUsers();
       closeEditModal();
-    } catch {
-      setModalError('No se pudieron guardar los cambios.');
+    } catch (err: any) {
+      const msg = err?.response?.data?.message || 'No se pudieron guardar los cambios.';
+      setModalError(msg);
     } finally {
       setSaving(false);
     }
@@ -201,13 +197,13 @@ export default function UserManagementModal({ onClose }: Props) {
       setError('No puedes eliminar tu propio usuario.');
       return;
     }
-    setConfirmAction({ type: 'delete', user });
+    setDeleteTarget(user);
   };
 
-  const executeDelete = async () => {
-    if (!confirmAction || confirmAction.type !== 'delete') return;
-    const user = confirmAction.user;
-    setConfirmAction(null);
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
+    const user = deleteTarget;
+    setDeleteTarget(null);
 
     setDeletingId(user.id);
     setError('');
@@ -227,21 +223,13 @@ export default function UserManagementModal({ onClose }: Props) {
 
   const handleCancel = (e?: React.MouseEvent) => {
     e?.stopPropagation();
-    if (hasChanges) {
-      setConfirmAction({ type: 'discard' });
-      return;
-    }
     closeEditModal();
   };
 
   const handleOuterClose = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (saving || isClosing) return;
-    if (hasChanges) {
-      setConfirmAction({ type: 'discard' });
-    } else {
-      closeEditModal();
-    }
+    closeEditModal();
   };
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
@@ -249,21 +237,12 @@ export default function UserManagementModal({ onClose }: Props) {
       e.preventDefault();
       if (saving || isClosing) return;
       if (selectedUser) {
-        if (hasChanges) {
-          setConfirmAction({ type: 'discard' });
-        } else {
-          closeEditModal();
-        }
+        closeEditModal();
       } else {
         onClose();
       }
     }
-  }, [selectedUser, hasChanges, saving, isClosing, onClose, closeEditModal]);
-
-  const executeDiscard = () => {
-    setConfirmAction(null);
-    closeEditModal();
-  };
+  }, [selectedUser, saving, isClosing, onClose, closeEditModal]);
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
@@ -488,16 +467,12 @@ export default function UserManagementModal({ onClose }: Props) {
       )}
 
       <ConfirmDialog
-        open={confirmAction !== null}
-        title={confirmAction?.type === 'delete' ? 'Eliminar usuario' : 'Descartar cambios'}
-        message={
-          confirmAction?.type === 'delete'
-            ? `¿Eliminar ${confirmAction.user.name || confirmAction.user.email || 'este usuario'}?\nEsto borrará su historial y mensajes asociados.`
-            : '¿Descartar los cambios sin guardar?'
-        }
-        confirmLabel={confirmAction?.type === 'delete' ? 'Eliminar' : 'Descartar'}
-        onConfirm={confirmAction?.type === 'delete' ? executeDelete : executeDiscard}
-        onCancel={() => setConfirmAction(null)}
+        open={deleteTarget !== null}
+        title="Eliminar usuario"
+        message={`¿Eliminar ${deleteTarget?.name || deleteTarget?.email || 'este usuario'}?\nEsto borrará su historial y mensajes asociados.`}
+        confirmLabel="Eliminar"
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTarget(null)}
       />
     </div>
   );

@@ -67,16 +67,9 @@ describe('ConfirmDialog', () => {
     expect(props.onCancel).not.toHaveBeenCalled();
   });
 
-  it('calls onCancel when Escape is pressed', () => {
+  it('does not listen to Escape (handled by parent)', () => {
     const { props } = renderDialog();
     fireEvent.keyDown(window, { key: 'Escape' });
-    expect(props.onCancel).toHaveBeenCalledOnce();
-  });
-
-  it('does not listen to Escape when closed', () => {
-    const onCancel = vi.fn();
-    render(<ConfirmDialog open={false} title="" message="" onConfirm={vi.fn()} onCancel={onCancel} />);
-    fireEvent.keyDown(window, { key: 'Escape' });
-    expect(onCancel).not.toHaveBeenCalled();
+    expect(props.onCancel).not.toHaveBeenCalled();
   });
 });
