@@ -25,7 +25,6 @@ export function useSimulationSocket() {
     setActiveSimId,
     setErrorMessage,
     setSimStats,
-    setFullStateSimId,
     deselect,
   } = useSimulationStore();
 

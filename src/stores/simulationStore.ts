@@ -27,7 +27,6 @@ interface SimulationStore {
   errorMessage: string | null;
   simStats: SimulationStats | null;
   highlightPosition: { lat: number; lng: number } | null;
-  fullStateSimId: string | null;
   setSimStats: (stats: SimulationStats | null) => void;
   setHighlightPosition: (pos: { lat: number; lng: number } | null) => void;
   setLeftPanelTab: (tab: 'control' | 'admin') => void;
@@ -53,7 +52,6 @@ interface SimulationStore {
   setBasemapId: (basemapId: string) => void;
   setAddMode: (mode: 'vehicle' | 'trafficLight' | null) => void;
   setClickPosition: (pos: { lat: number; lng: number } | null) => void;
-  setFullStateSimId: (simId: string | null) => void;
   setErrorMessage: (message: string | null) => void;
 }
 
@@ -75,7 +73,6 @@ export const useSimulationStore = create<SimulationStore>((set) => ({
   errorMessage: null,
   simStats: null,
   highlightPosition: null,
-  fullStateSimId: null,
 
   setFullState: (vehicles, trafficLights, tick) =>
     set({ vehicles, trafficLights, tick, simStats: null }),
@@ -117,6 +114,5 @@ export const useSimulationStore = create<SimulationStore>((set) => ({
   setLeftPanelTab: (leftPanelTab) => set({ leftPanelTab }),
   setAddMode: (addMode) => set({ addMode }),
   setClickPosition: (clickPosition) => set({ clickPosition }),
-  setFullStateSimId: (fullStateSimId) => set({ fullStateSimId }),
   setErrorMessage: (errorMessage) => set({ errorMessage }),
 }));

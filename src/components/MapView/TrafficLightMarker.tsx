@@ -21,7 +21,7 @@ export default function TrafficLightMarker({ light }: Props) {
   return (
     <CircleMarker
       center={[light.lat, light.lon]}
-      radius={selected ? 6 : 4}
+      radius={selected ? 8 : 6}
       pathOptions={{
         color: selected ? '#FFFFFF' : '#374151',
         fillColor: STATE_COLORS[light.state],
