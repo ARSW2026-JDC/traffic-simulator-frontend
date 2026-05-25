@@ -17,6 +17,7 @@ export function useSimulationSocket() {
   const activeSimId = useSimulationStore((s) => s.activeSimId);
   const {
     setFullState,
+    receiveFullState,
     applyDelta,
     setConnected,
     setRoutes,
@@ -87,7 +88,7 @@ export function useSimulationSocket() {
       if (!currentSimId) return;
       if (currentSimId && state.simId && state.simId !== currentSimId) return;
       pendingDeltaRef.current = null;
-      setFullState(state.vehicles, state.trafficLights, state.tick);
+      receiveFullState(currentSimId, state.vehicles, state.trafficLights, state.tick);
 
       const activeSimId = useSimulationStore.getState().activeSimId;
       if (!activeSimId) return;

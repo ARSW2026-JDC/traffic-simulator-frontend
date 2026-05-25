@@ -35,6 +35,12 @@ interface SimulationStore {
     trafficLights: Record<string, TrafficLight>,
     tick: number,
   ) => void;
+  receiveFullState: (
+    simId: string,
+    vehicles: Record<string, Vehicle>,
+    trafficLights: Record<string, TrafficLight>,
+    tick: number,
+  ) => void;
   applyDelta: (delta: SimulationDelta) => void;
   selectEntity: (id: string, type: 'vehicle' | 'trafficLight') => void;
   deselect: () => void;
@@ -70,6 +76,8 @@ export const useSimulationStore = create<SimulationStore>((set) => ({
 
   setFullState: (vehicles, trafficLights, tick) =>
     set({ vehicles, trafficLights, tick, simStats: null }),
+  receiveFullState: (simId, vehicles, trafficLights, tick) =>
+    set({ fullStateSimId: simId, vehicles, trafficLights, tick, simStats: null }),
 
   setSimStats: (simStats) => set({ simStats }),
   setHighlightPosition: (highlightPosition) => set({ highlightPosition }),
