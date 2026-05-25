@@ -77,7 +77,7 @@ export const useSimulationStore = create<SimulationStore>((set) => ({
   setFullState: (vehicles, trafficLights, tick) =>
     set({ vehicles, trafficLights, tick, simStats: null }),
   receiveFullState: (simId, vehicles, trafficLights, tick) =>
-    set({ fullStateSimId: simId, vehicles, trafficLights, tick, simStats: null }),
+    set((state) => ({ ...state, fullStateSimId: simId, vehicles, trafficLights, tick, simStats: null })),
 
   setSimStats: (simStats) => set({ simStats }),
   setHighlightPosition: (highlightPosition) => set({ highlightPosition }),
